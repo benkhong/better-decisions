@@ -1967,28 +1967,28 @@ where &nbsp; LR &nbsp; = &nbsp; P(evidence | hypothesis true) &nbsp; / &nbsp; P(
 <!-- BAYES WIDGET -->
 <div class="widget" id="bayesWidget">
   <h4>Bayes calculator</h4>
-  <p class="widget-desc">Set a prior, a sensitivity (true positive rate), and a false positive rate. The posterior is what you should believe after a positive test. Move the sliders &mdash; the answer updates live.</p>
+  <p class="widget-desc">Imagine a medical test. The three sliders set up the scenario. <strong>Prior</strong> is how common the disease is in the population you're drawing from &mdash; before any test is run. <strong>Sensitivity</strong> is how reliably the test catches people who really do have the disease. <strong>False positive rate</strong> is how often the test incorrectly flags someone who is perfectly healthy. The <strong>posterior</strong> at the bottom is the answer to the question that actually matters: <em>if my test just came back positive, what are the odds I truly have it?</em> Move the sliders to see how each factor pulls that number up or down.</p>
 
   <div class="widget-row three">
     <div class="widget-field">
       <label>Prior · base rate</label>
       <input type="range" id="bayesPrior" min="0.1" max="99" step="0.1" value="1">
-      <div class="widget-suffix"><span id="bayesPriorVal">1.0</span>% have the condition</div>
+      <div class="widget-suffix"><span id="bayesPriorVal">1.0</span>% of people actually have it</div>
     </div>
     <div class="widget-field">
       <label>Sensitivity</label>
       <input type="range" id="bayesSens" min="50" max="100" step="0.5" value="90">
-      <div class="widget-suffix"><span id="bayesSensVal">90</span>% true positive rate</div>
+      <div class="widget-suffix">if you have it, the test catches it <span id="bayesSensVal">90</span>% of the time</div>
     </div>
     <div class="widget-field">
       <label>False positive rate</label>
       <input type="range" id="bayesFpr" min="0.1" max="50" step="0.1" value="10">
-      <div class="widget-suffix"><span id="bayesFprVal">10.0</span>% test wrong</div>
+      <div class="widget-suffix">if you don't have it, the test still flags you <span id="bayesFprVal">10.0</span>% of the time</div>
     </div>
   </div>
 
   <div class="widget-output">
-    <div class="out-label">Posterior · actually have it, given positive test</div>
+    <div class="out-label">Posterior · chance you actually have it, given a positive test</div>
     <div class="out-value"><span id="bayesPosterior">8.3</span>%</div>
     <div class="widget-bar-viz"><div class="bar-fill" id="bayesBar" style="width: 8.3%"></div></div>
     <div class="out-secondary" id="bayesExplain">Of 10,000 people: ~100 have it (90 test positive) and ~9,900 don't (990 false positives). 90 ÷ 1,080 ≈ 8.3%.</div>
