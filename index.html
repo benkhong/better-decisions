@@ -1,0 +1,3445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Decide — A Working Manual</title>
+<meta name="description" content="A working manual for thinking clearly and choosing well under uncertainty. Distilled from Kahneman, Buffett, Tetlock, Munger, Duke, Taleb, Galef, and others — with practical tools, worked examples, and interactive widgets.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Inter+Tight:wght@500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   HOW TO DECIDE · A WORKING MANUAL
+   Modern field-manual design system
+   ============================================================ */
+
+:root {
+  /* Paper & ink */
+  --paper:        #f7f5ef;
+  --paper-2:      #efece2;
+  --paper-3:      #e7e3d4;
+  --card:         #efece2;
+  --card-2:       #e9e5d6;
+
+  --ink:          #131310;
+  --ink-2:        #38362d;
+  --ink-3:        #6a6657;
+  --ink-4:        #9a9682;
+
+  --rule:         #d8d4c5;
+  --rule-strong:  #b9b39b;
+
+  /* Primary accent: deep petrol teal */
+  --teal:         #0e5b66;
+  --teal-bright:  #137585;
+  --teal-deep:    #093e46;
+  --teal-soft:    rgba(14, 91, 102, 0.08);
+  --teal-edge:    rgba(14, 91, 102, 0.28);
+
+  /* Secondary accent: burnt amber */
+  --amber:        #c25e16;
+  --amber-bright: #db7920;
+  --amber-soft:   rgba(194, 94, 22, 0.10);
+  --amber-deep:   #8a3f0a;
+
+  /* Marker highlight */
+  --mark:         rgba(253, 224, 71, 0.45);
+  --mark-bold:    rgba(253, 224, 71, 0.70);
+
+  /* Semantic */
+  --positive:     #2d6a31;
+  --positive-soft: rgba(45, 106, 49, 0.10);
+  --danger:       #b03020;
+  --danger-soft:  rgba(176, 48, 32, 0.08);
+  --info:         #2a4d7e;
+  --info-soft:    rgba(42, 77, 126, 0.08);
+
+  /* Type */
+  --display:  'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --body:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono:     'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Layout */
+  --measure: 42rem;
+  --gutter:  12rem;
+  --gap:     2.75rem;
+  --total:   calc(var(--measure) + var(--gap) + var(--gutter));
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  font-size: 17px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  font-weight: 400;
+  font-feature-settings: 'cv11', 'ss01', 'ss03', 'cv03', 'kern';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--teal);
+  color: var(--paper);
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--teal);
+  z-index: 200;
+  transition: width 0.08s ease-out;
+}
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  right: -2px; top: -1px;
+  width: 4px; height: 4px;
+  background: var(--amber);
+  border-radius: 50%;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 17rem;
+  height: 100vh;
+  padding: 2.5rem 1.5rem 2rem 2.5rem;
+  overflow-y: auto;
+  background: var(--paper);
+  border-right: 1px solid var(--rule);
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: 3px; }
+
+.brand {
+  display: block;
+  text-decoration: none;
+  margin-bottom: 0.65rem;
+}
+.brand-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 500;
+  margin-bottom: 0.45rem;
+  display: block;
+}
+.brand-mark {
+  font-family: var(--display);
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  line-height: 0.95;
+  display: block;
+}
+.brand-mark .b-accent { color: var(--teal); }
+.brand-rule {
+  width: 1.75rem;
+  height: 2px;
+  background: var(--teal);
+  margin: 1.1rem 0 1.35rem;
+}
+.brand-tag {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1.85rem;
+  font-weight: 500;
+}
+
+.sidebar nav { display: flex; flex-direction: column; }
+
+.nav-section {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin: 1.55rem 0 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 600;
+}
+.nav-section:first-of-type { margin-top: 0; }
+.nav-section .ns-num {
+  color: var(--amber);
+  font-weight: 700;
+  margin-right: 0.4em;
+}
+
+.sidebar nav a {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  line-height: 1.32;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 0.32rem 0;
+  border-left: 2px solid transparent;
+  padding-left: 0.7rem;
+  margin-left: -0.7rem;
+  transition: all 0.12s ease;
+  font-weight: 450;
+}
+.sidebar nav a:hover {
+  color: var(--teal);
+  border-left-color: var(--teal-edge);
+  background: var(--teal-soft);
+}
+.sidebar nav a.active {
+  color: var(--teal);
+  border-left-color: var(--teal);
+  font-weight: 600;
+}
+
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  top: 0.9rem; left: 0.9rem;
+  z-index: 110;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 0.55rem 0.95rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.shell {
+  margin-left: 17rem;
+  min-height: 100vh;
+}
+
+.long-form {
+  max-width: var(--total);
+  margin: 0 auto;
+  padding: 4.5rem 4rem 6rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) var(--gutter);
+  column-gap: var(--gap);
+  align-items: start;
+  margin-bottom: 1.1rem;
+}
+.row > :first-child { grid-column: 1; }
+.row > .sidenote { grid-column: 2; }
+
+.block {
+  max-width: var(--measure);
+  margin-bottom: 1.1rem;
+}
+
+.wide {
+  max-width: var(--total);
+  margin-bottom: 1.5rem;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+h1, h2, h3, h4, h5 { font-family: var(--display); color: var(--ink); }
+
+h2 {
+  font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.035em;
+  margin: 0.5rem 0 0.5rem;
+  max-width: var(--measure);
+}
+h2 .accent { color: var(--teal); }
+h2 .underline-amber {
+  background: linear-gradient(180deg, transparent 60%, var(--amber-soft) 60%);
+  padding: 0 0.1em;
+}
+
+h3 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.022em;
+  margin: 3.5rem 0 0.85rem;
+  color: var(--ink);
+  max-width: var(--measure);
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+}
+h3 .h3-num {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--amber);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+h4 {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin: 2.25rem 0 0.7rem;
+  max-width: var(--measure);
+}
+
+.section-eyebrow {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.6rem;
+}
+
+p {
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.66;
+  margin-bottom: 1.05rem;
+  color: var(--ink);
+  max-width: var(--measure);
+  font-weight: 400;
+  hanging-punctuation: first;
+}
+p:last-child { margin-bottom: 0; }
+
+strong { font-weight: 600; color: var(--ink); }
+em { font-style: italic; }
+
+a {
+  color: var(--teal);
+  text-decoration: none;
+  border-bottom: 1px solid var(--teal-edge);
+  transition: all 0.12s ease;
+  font-weight: 500;
+}
+a:hover {
+  color: var(--teal-bright);
+  border-bottom-color: var(--teal);
+  background: var(--teal-soft);
+}
+
+mark, .mark {
+  background: linear-gradient(180deg, transparent 35%, var(--mark) 35%, var(--mark) 90%, transparent 90%);
+  color: var(--ink);
+  padding: 0 0.05em;
+}
+.mark-bold {
+  background: linear-gradient(180deg, transparent 35%, var(--mark-bold) 35%, var(--mark-bold) 90%, transparent 90%);
+}
+
+ul, ol {
+  margin: 0.5rem 0 1.1rem;
+  padding-left: 1.5rem;
+  max-width: var(--measure);
+}
+li {
+  margin-bottom: 0.45rem;
+  line-height: 1.6;
+}
+ul li::marker { color: var(--teal); content: '— '; }
+ol li::marker { color: var(--teal); font-family: var(--mono); font-size: 0.85rem; font-weight: 600; }
+
+hr {
+  border: none;
+  height: 1px;
+  background: var(--rule);
+  margin: 3rem 0;
+  max-width: var(--measure);
+}
+
+/* Code / formula */
+code, .formula {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: var(--paper-3);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  color: var(--teal-deep);
+  font-weight: 500;
+}
+
+.formula-block {
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--amber);
+  padding: 0.9rem 1.15rem;
+  margin: 1.25rem 0;
+  max-width: var(--measure);
+  color: var(--ink);
+  line-height: 1.65;
+  border-radius: 0 4px 4px 0;
+  overflow-x: auto;
+}
+
+/* ============================================================
+   SIDENOTES (modern, restrained — replaces marginalia)
+   ============================================================ */
+
+.sidenote {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  padding-top: 0.45rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--amber);
+  position: relative;
+}
+.sidenote .sn-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.4rem;
+}
+
+/* ============================================================
+   CALLOUTS
+   ============================================================ */
+
+.callout {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1.15rem 1.4rem;
+  margin: 1.65rem 0;
+  max-width: var(--measure);
+  position: relative;
+}
+.callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 0.7rem;
+}
+.callout-title::before {
+  content: '';
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--ink-3);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.callout p { margin-bottom: 0.55rem; font-size: 0.98rem; line-height: 1.6; }
+.callout p:last-child { margin-bottom: 0; }
+
+.callout.example       { border-left: 3px solid var(--info); background: var(--info-soft); }
+.callout.example .callout-title { color: var(--info); }
+.callout.example .callout-title::before { background: var(--info); }
+
+.callout.warning       { border-left: 3px solid var(--danger); background: var(--danger-soft); }
+.callout.warning .callout-title { color: var(--danger); }
+.callout.warning .callout-title::before { background: var(--danger); }
+
+.callout.try           { border-left: 3px solid var(--positive); background: var(--positive-soft); }
+.callout.try .callout-title    { color: var(--positive); }
+.callout.try .callout-title::before { background: var(--positive); }
+
+.callout.mistake       { border-left: 3px solid var(--amber); background: var(--amber-soft); }
+.callout.mistake .callout-title { color: var(--amber-deep); }
+.callout.mistake .callout-title::before { background: var(--amber); }
+
+.callout.beginner      { border-left: 3px solid var(--teal); background: var(--teal-soft); }
+.callout.beginner .callout-title { color: var(--teal); }
+.callout.beginner .callout-title::before { background: var(--teal); }
+
+/* ============================================================
+   PULL QUOTES — big, bold, modern
+   ============================================================ */
+
+.pullquote {
+  margin: 3rem 0;
+  max-width: var(--measure);
+  position: relative;
+  padding-left: 1.5rem;
+  border-left: 3px solid var(--teal);
+}
+.pullquote p {
+  font-family: var(--display);
+  font-size: 1.85rem;
+  line-height: 1.18;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 0.9rem;
+}
+.pullquote cite {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-style: normal;
+  display: block;
+}
+.pullquote cite::before { content: '— '; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero {
+  padding: 5rem 0 3rem;
+  max-width: 48rem;
+}
+.hero-meta {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.hero-meta .hm-tag {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.32rem 0.65rem;
+  border-radius: 2px;
+}
+.hero-meta .hm-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  max-width: 8rem;
+}
+.hero-meta .hm-version { color: var(--ink-3); }
+
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  line-height: 0.92;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  margin-bottom: 2rem;
+  color: var(--ink);
+}
+.hero h1 .h1-teal { color: var(--teal); }
+.hero h1 .h1-mark {
+  background: linear-gradient(180deg, transparent 65%, var(--mark) 65%, var(--mark) 95%, transparent 95%);
+  padding: 0 0.05em;
+}
+
+.hero .tagline {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  max-width: 36rem;
+  margin-bottom: 2rem;
+}
+
+.hero .lede {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  max-width: 34rem;
+}
+
+.hero .byline-top {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  max-width: 34rem;
+}
+.hero .byline-top .by-author { color: var(--ink); font-weight: 600; }
+
+/* ============================================================
+   FAST PATH
+   ============================================================ */
+
+.fast-path {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 4px;
+  padding: 1.85rem 2.1rem;
+  margin: 3rem 0 2.5rem;
+  max-width: 38rem;
+}
+.fast-path .fp-label {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber-bright);
+  margin-bottom: 0.6rem;
+}
+.fast-path h4 {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--paper);
+  text-transform: none;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.1rem;
+}
+.fast-path ol {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+.fast-path ol li {
+  counter-increment: fast;
+  padding-left: 2.5rem;
+  position: relative;
+  margin-bottom: 0.75rem;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--paper);
+}
+.fast-path ol { counter-reset: fast; }
+.fast-path ol li::before {
+  content: counter(fast, decimal-leading-zero);
+  position: absolute;
+  left: 0; top: 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--amber-bright);
+  font-weight: 600;
+}
+.fast-path a {
+  color: var(--paper);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(247,245,239,0.3);
+}
+.fast-path a:hover { color: var(--amber-bright); border-bottom-color: var(--amber-bright); background: transparent; }
+
+/* ============================================================
+   MODULE OPENERS
+   ============================================================ */
+
+.module {
+  margin: 5.5rem 0 3rem;
+  padding: 3.5rem 0 0;
+  border-top: 1px solid var(--rule);
+  max-width: var(--total);
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+.module-num-wrap {
+  position: relative;
+  padding-top: 0.5rem;
+}
+.module-label {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.65rem;
+}
+.module-num {
+  font-family: var(--display);
+  font-size: clamp(5rem, 10vw, 8rem);
+  font-weight: 900;
+  color: var(--teal);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+.module-body { padding-top: 0.5rem; }
+.module h2 {
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  margin-bottom: 1.1rem;
+  max-width: 32rem;
+}
+.module-intro {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  color: var(--ink-2);
+  max-width: 28rem;
+  margin-bottom: 1.6rem;
+}
+
+.promise {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal);
+  background: var(--teal-soft);
+  padding: 0.4rem 0.75rem;
+  border-radius: 3px;
+  margin-bottom: 0.65rem;
+}
+.promise + p {
+  font-style: normal;
+  color: var(--ink-2);
+  font-size: 0.98rem;
+  max-width: 32rem;
+}
+
+/* ============================================================
+   OVERVIEW GRID
+   ============================================================ */
+
+.overview {
+  margin: 4rem 0 2rem;
+  max-width: var(--total);
+}
+.overview-title {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.overview-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.25rem;
+}
+.overview-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1.35rem 1.45rem;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid var(--rule);
+  transition: all 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.overview-card:hover {
+  border-color: var(--teal);
+  background: var(--card-2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(14, 91, 102, 0.08);
+}
+.overview-card .oc-num {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--amber);
+  margin-bottom: 0.7rem;
+  letter-spacing: 0.1em;
+}
+.overview-card h3 {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.55rem;
+  max-width: none;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+  display: block;
+}
+.overview-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin-bottom: 0.85rem;
+  flex-grow: 1;
+}
+.overview-card .topics {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  line-height: 1.5;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--rule);
+}
+
+/* ============================================================
+   DATA POINTS — big number callouts
+   ============================================================ */
+
+.datapoint {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  align-items: center;
+  background: var(--card);
+  border-left: 3px solid var(--teal);
+  padding: 1.1rem 1.4rem;
+  margin: 1.5rem 0;
+  max-width: var(--measure);
+  border-radius: 0 4px 4px 0;
+}
+.datapoint .dp-num {
+  font-family: var(--display);
+  font-size: 2.85rem;
+  font-weight: 900;
+  color: var(--teal);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.datapoint .dp-text {
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.datapoint .dp-text strong { color: var(--ink); }
+
+/* ============================================================
+   EXAMPLE CARDS
+   ============================================================ */
+
+.example-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1.65rem 1.85rem;
+  margin: 2rem 0;
+  max-width: var(--measure);
+}
+.example-card .card-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.45rem;
+}
+.example-card .card-title {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1.2rem;
+  line-height: 1.15;
+}
+.example-step {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 1.1rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px dotted var(--rule);
+}
+.example-step:last-child { border-bottom: none; }
+.example-step .step-label {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  padding-top: 0.18rem;
+}
+.example-step .step-text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* ============================================================
+   QUICK TESTS GRID
+   ============================================================ */
+
+.tests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0;
+  max-width: var(--total);
+}
+.test-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1.5rem 1.65rem;
+  position: relative;
+  transition: all 0.18s ease;
+}
+.test-card:hover {
+  border-color: var(--teal-edge);
+  transform: translateY(-1px);
+}
+.test-card .test-num {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.4rem;
+}
+.test-card .test-title {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 0.7rem;
+  line-height: 1.15;
+}
+.test-card .test-question {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--teal);
+  margin-bottom: 0.9rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+.test-card p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin-bottom: 0.7rem;
+}
+.test-card .test-howto {
+  font-size: 0.84rem;
+  color: var(--ink-3);
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--rule);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   META-PATTERNS GRID
+   ============================================================ */
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.1rem;
+  margin: 2rem 0;
+  max-width: var(--total);
+}
+.meta-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 1.4rem 1.45rem;
+  transition: all 0.18s ease;
+}
+.meta-card:hover { border-color: var(--teal-edge); }
+.meta-card .meta-num {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--amber);
+  margin-bottom: 0.55rem;
+  letter-spacing: 0.1em;
+}
+.meta-card .meta-name {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin-bottom: 0.55rem;
+  line-height: 1.2;
+}
+.meta-card p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* ============================================================
+   READING LIST
+   ============================================================ */
+
+.reading-list { margin: 2rem 0; max-width: var(--total); }
+.book {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 1.25rem;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule);
+  max-width: 44rem;
+  align-items: start;
+}
+.book:first-child { border-top: 1px solid var(--rule); }
+.book .book-mark {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--amber);
+  padding-top: 0.35rem;
+  letter-spacing: 0.05em;
+}
+.book .book-title {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 0.2rem;
+  line-height: 1.2;
+}
+.book .book-author {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.book .book-desc {
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 34rem;
+}
+
+/* ============================================================
+   GLOSSARY
+   ============================================================ */
+
+.glossary { margin: 2rem 0; max-width: var(--total); }
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 0 2rem;
+  border-top: 1px solid var(--rule);
+}
+.glossary-entry {
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.glossary-term {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--teal);
+  margin-bottom: 0.3rem;
+}
+.glossary-def {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+/* ============================================================
+   DIVIDERS — clean, modern (no ornaments)
+   ============================================================ */
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 4rem auto;
+  max-width: var(--measure);
+  color: var(--ink-4);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.divider-text { color: var(--amber); }
+
+/* ============================================================
+   COLOPHON
+   ============================================================ */
+
+.colophon {
+  margin: 6rem 0 0;
+  padding: 3rem 0 1.5rem;
+  border-top: 2px solid var(--ink);
+  max-width: var(--measure);
+}
+.colophon .signature {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin: 1rem 0 0.5rem;
+}
+.colophon .signature .by { color: var(--amber); margin-right: 0.4em; font-weight: 500; }
+.colophon .meta {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   SVG DIAGRAMS
+   ============================================================ */
+
+.diagram {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  max-width: var(--measure);
+}
+.diagram-title {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram-caption {
+  font-family: var(--body);
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--ink-3);
+  text-align: center;
+  margin-top: 0.85rem;
+  line-height: 1.45;
+}
+
+/* ============================================================
+   INTERACTIVE WIDGETS
+   ============================================================ */
+
+.widget {
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  padding: 1.85rem 1.95rem;
+  margin: 2rem 0;
+  max-width: var(--measure);
+  position: relative;
+  box-shadow: 0 1px 0 var(--rule);
+}
+.widget::before {
+  content: '◆ INTERACTIVE';
+  position: absolute;
+  top: -0.6rem;
+  left: 1.4rem;
+  background: var(--paper);
+  padding: 0 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--teal);
+}
+.widget h4 {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  margin: 0 0 0.45rem;
+  text-transform: none;
+}
+.widget .widget-desc {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin-bottom: 1.35rem;
+  max-width: none;
+}
+
+.widget label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 0.35rem;
+}
+.widget input[type="number"], .widget input[type="text"] {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 0.98rem;
+  font-weight: 500;
+  padding: 0.6rem 0.8rem;
+  background: var(--paper);
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.widget input:focus { border-color: var(--teal); }
+.widget input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--rule);
+  border-radius: 2px;
+  outline: none;
+}
+.widget input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  background: var(--teal);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--paper);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.widget input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px;
+  background: var(--teal);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--paper);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.widget-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.widget-row.single { grid-template-columns: 1fr; }
+.widget-row.three { grid-template-columns: 1fr 1fr 1fr; }
+.widget-field { display: flex; flex-direction: column; }
+.widget-suffix {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-3);
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.widget-output {
+  margin-top: 1.35rem;
+  padding: 1.15rem 1.3rem;
+  background: var(--card);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 3px 3px 0;
+}
+.widget-output .out-label {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.3rem;
+}
+.widget-output .out-value {
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.widget-output .out-secondary {
+  font-family: var(--body);
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  margin-top: 0.55rem;
+  line-height: 1.55;
+}
+.widget-output.positive { border-left-color: var(--positive); }
+.widget-output.positive .out-label { color: var(--positive); }
+
+.widget-bar-viz {
+  margin-top: 0.85rem;
+  height: 10px;
+  background: var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.widget-bar-viz .bar-fill {
+  height: 100%;
+  background: var(--teal);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.widget button {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--teal);
+  color: var(--paper);
+  border: none;
+  padding: 0.72rem 1.45rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.widget button:hover { background: var(--teal-bright); }
+.widget button.secondary {
+  background: transparent;
+  color: var(--teal);
+  border: 1px solid var(--teal);
+}
+.widget button.secondary:hover { background: var(--teal-soft); }
+.widget button.amber {
+  background: var(--amber);
+}
+.widget button.amber:hover { background: var(--amber-bright); }
+
+/* Anchoring widget */
+.anchor-choice-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+.anchor-btn {
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  padding: 1.1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.18s ease;
+  font-family: var(--body);
+}
+.anchor-btn:hover {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+  transform: translateY(-1px);
+}
+.anchor-btn.selected {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+  border-width: 2px;
+  padding: calc(1.1rem - 1px);
+}
+.anchor-btn .ab-num {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--teal);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.35rem;
+}
+.anchor-btn .ab-label {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Calibration test */
+.calib-question {
+  margin-bottom: 1.15rem;
+  padding-bottom: 1.15rem;
+  border-bottom: 1px dotted var(--rule);
+}
+.calib-question:last-child { border-bottom: none; padding-bottom: 0; }
+.calib-question .q-text {
+  font-family: var(--body);
+  font-size: 0.96rem;
+  margin-bottom: 0.55rem;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.calib-question .q-num {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--amber);
+  margin-right: 0.5rem;
+  font-weight: 600;
+}
+.calib-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.calib-result {
+  margin-top: 0.55rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.42rem 0.65rem;
+  border-radius: 3px;
+}
+.calib-result.hit { background: var(--positive-soft); color: var(--positive); }
+.calib-result.miss { background: var(--danger-soft); color: var(--danger); }
+
+/* ============================================================
+   PRINTABLE TEMPLATES
+   ============================================================ */
+
+.template {
+  background: var(--paper);
+  border: 2px dashed var(--ink);
+  padding: 2rem 2.25rem;
+  margin: 2rem 0;
+  max-width: var(--measure);
+  position: relative;
+}
+.template::before {
+  content: '✂ PRINTABLE';
+  position: absolute;
+  top: -0.62rem;
+  right: 1.4rem;
+  background: var(--paper);
+  padding: 0 0.65rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--ink-3);
+}
+.template h5 {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  margin-bottom: 0.45rem;
+  color: var(--ink);
+}
+.template .template-sub {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.template-field {
+  margin-bottom: 1rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--ink-3);
+}
+.template-field .field-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 0.35rem;
+}
+.template-field .field-line {
+  min-height: 1.5rem;
+  font-style: italic;
+  color: var(--ink-4);
+  font-size: 0.88rem;
+}
+.template-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .row {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+  .row > .sidenote {
+    grid-column: 1;
+    margin: 0.5rem 0 1rem;
+    max-width: var(--measure);
+  }
+  .module {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  .module-num { font-size: 5.5rem; }
+  .module-num-wrap { padding-top: 0; }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    width: 19rem;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .shell { margin-left: 0; }
+  .long-form { padding: 4.5rem 1.5rem 4rem; }
+  .mobile-nav-toggle { display: block; }
+  .hero { padding-top: 4rem; }
+}
+
+@media (max-width: 600px) {
+  html { font-size: 16px; }
+  .long-form { padding: 4rem 1.1rem 3rem; }
+  .hero h1 { font-size: 2.75rem; }
+  .module-num { font-size: 4.5rem; }
+  .widget, .callout, .example-card, .template { padding: 1.25rem 1.3rem; }
+  .calib-inputs { grid-template-columns: 1fr; }
+  .widget-row, .widget-row.three { grid-template-columns: 1fr; }
+  .pullquote p { font-size: 1.4rem; }
+  .anchor-choice-row { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .sidebar, .mobile-nav-toggle, .progress-bar, .widget::before, .template::before { display: none; }
+  .shell { margin-left: 0; }
+  body { background: white; }
+  .widget, .callout, .example-card, .template { break-inside: avoid; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero > * { animation: fadeUp 0.65s ease-out both; }
+.hero .hero-meta { animation-delay: 0.05s; }
+.hero h1 { animation-delay: 0.15s; }
+.hero .tagline { animation-delay: 0.28s; }
+.hero .lede { animation-delay: 0.4s; }
+.hero .byline-top { animation-delay: 0.52s; }
+
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Mobile nav toggle -->
+<button class="mobile-nav-toggle" id="mobileNavToggle">☰ Menu</button>
+
+
+<!-- ============================================================
+     SIDEBAR
+     ============================================================ -->
+<aside class="sidebar" id="sidebar">
+  <a href="#top" class="brand">
+    <span class="brand-eyebrow">A Working Manual</span>
+    <span class="brand-mark">How&nbsp;to<br><span class="b-accent">Decide</span></span>
+  </a>
+  <div class="brand-rule"></div>
+  <div class="brand-tag">Edition · 2026</div>
+
+  <nav>
+    <div class="nav-section">Intro</div>
+    <a href="#hero">How to Decide</a>
+    <a href="#overview">The five modules</a>
+    <a href="#fastpath">Fast path</a>
+
+    <div class="nav-section"><span class="ns-num">01</span>Brain bugs</div>
+    <a href="#p1-built">Built for another world</a>
+    <a href="#p1-speeds">Two speeds</a>
+    <a href="#p1-anchor">Anchoring demo</a>
+    <a href="#p1-replication">Replication crisis</a>
+
+    <div class="nav-section"><span class="ns-num">02</span>Seeing clearly</div>
+    <a href="#p2-updating">Updating beliefs</a>
+    <a href="#p2-bayes">Bayes, properly</a>
+    <a href="#p2-signal">Signal vs noise</a>
+    <a href="#p2-causation">Correlation ≠ causation</a>
+    <a href="#p2-narrative">Narrative fallacy</a>
+    <a href="#p2-regression">Regression to the mean</a>
+    <a href="#p2-fattails">Fat tails</a>
+    <a href="#p2-biases">Key biases</a>
+    <a href="#p2-loss">Loss aversion calculator</a>
+    <a href="#p2-calibration">Calibration test</a>
+    <a href="#p2-tournaments">Forecasting tournaments</a>
+    <a href="#p2-outside">The outside view</a>
+    <a href="#p2-scout">Scout vs soldier</a>
+    <a href="#p2-steel">Steelmanning &amp; the ITT</a>
+
+    <div class="nav-section"><span class="ns-num">03</span>Choosing well</div>
+    <a href="#p3-resulting">Resulting</a>
+    <a href="#p3-ev">Thinking in bets &amp; EV</a>
+    <a href="#p3-doors">One-way / two-way doors</a>
+    <a href="#p3-ruin">Risk of ruin</a>
+    <a href="#p3-kelly">Kelly criterion</a>
+    <a href="#p3-sunk">Sunk costs</a>
+    <a href="#p3-quit">Kill criteria</a>
+    <a href="#p3-optionality">Optionality</a>
+    <a href="#p3-stop">When to stop researching</a>
+    <a href="#p3-inversion">Inversion</a>
+    <a href="#p3-regret">Regret minimization</a>
+    <a href="#p3-emotion">Emotional state</a>
+    <a href="#p3-secondorder">Second-order effects</a>
+    <a href="#p3-investors">What the great investors know</a>
+
+    <div class="nav-section"><span class="ns-num">04</span>The toolkit</div>
+    <a href="#p4-tests">Six quick tests</a>
+    <a href="#p4-journal">Decision journal</a>
+    <a href="#p4-premortem">Pre-mortem</a>
+    <a href="#p4-examples">Worked examples</a>
+    <a href="#p4-llm">LLMs as partners</a>
+
+    <div class="nav-section"><span class="ns-num">05</span>Deeper game</div>
+    <a href="#p5-incentives">Incentives</a>
+    <a href="#p5-game">Game theory</a>
+    <a href="#p5-moloch">Moloch</a>
+    <a href="#p5-complex">Complex systems</a>
+    <a href="#p5-evolution">Evolution</a>
+    <a href="#p5-antifragile">Antifragility</a>
+    <a href="#p5-meta">Meta-patterns</a>
+
+    <div class="nav-section">End</div>
+    <a href="#glossary">Glossary</a>
+    <a href="#reading">Further reading</a>
+  </nav>
+</aside>
+
+<!-- ============================================================
+     ARTICLE
+     ============================================================ -->
+<main class="shell" id="top">
+<article class="long-form">
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-meta">
+    <span class="hm-tag">Working Manual</span>
+    <span class="hm-rule"></span>
+    <span class="hm-version">Edition 2026 · v2.0</span>
+  </div>
+
+  <h1>How to<br><span class="h1-teal">Decide.</span></h1>
+
+  <p class="tagline">A field manual for thinking clearly and choosing well under uncertainty &mdash; in life, in work, and with money.</p>
+
+  <p class="lede">Two things shape every outcome in your life: <strong>luck</strong> and <strong>the decisions you make</strong>. You can't control the first. This manual is about getting the second right. Inside: <span class="mark">how your brain misfires by default</span>, how to actually update beliefs with evidence, how to size a bet so you can't be ruined, what the great investors know, and how to use a language model as a thinking partner. Six interactive widgets, six worked examples, two printable templates.</p>
+
+  <div class="byline-top">
+    <span>Sources · Kahneman · Buffett · Munger · Tetlock · Taleb · Duke · Galef · Silver · Heath · Flyvbjerg · Henrich</span>
+  </div>
+</section>
+
+<!-- FAST PATH -->
+<section class="fast-path" id="fastpath">
+  <div class="fp-label">If you only have ten minutes</div>
+  <h4>Read these three things first</h4>
+  <ol>
+    <li><a href="#p3-resulting">Resulting</a> &mdash; why outcomes are a terrible way to judge decisions</li>
+    <li><a href="#p3-doors">One-way vs two-way doors</a> &mdash; you're agonizing over the wrong ones</li>
+    <li><a href="#p3-ruin">Risk of ruin</a> &mdash; the rule that overrides all the others</li>
+  </ol>
+</section>
+
+<!-- OVERVIEW -->
+<section class="overview" id="overview">
+  <div class="overview-title">The five modules</div>
+  <div class="overview-grid">
+    <a href="#mod1" class="overview-card">
+      <div class="oc-num">MODULE 01</div>
+      <h3>Why your brain lies to you</h3>
+      <p>Your brain was optimized for a different world. Learn the systematic errors it makes — so you can catch them in yourself.</p>
+      <div class="topics">System 1 &amp; 2 · base rate neglect · evolutionary mismatch · replication crisis</div>
+    </a>
+    <a href="#mod2" class="overview-card">
+      <div class="oc-num">MODULE 02</div>
+      <h3>Seeing clearly</h3>
+      <p>How to evaluate evidence, update beliefs, separate signal from noise. The mental models that sharpen perception.</p>
+      <div class="topics">Bayes · calibration · fat tails · outside view · scout mindset · steelmanning</div>
+    </a>
+    <a href="#mod3" class="overview-card">
+      <div class="oc-num">MODULE 03</div>
+      <h3>Choosing well</h3>
+      <p>The decision frameworks. How to weigh options, handle risk, avoid the traps, know when to commit — and what the great investors do.</p>
+      <div class="topics">EV · doors · ruin · Kelly · kill criteria · circle of competence · margin of safety</div>
+    </a>
+    <a href="#mod4" class="overview-card">
+      <div class="oc-num">MODULE 04</div>
+      <h3>The toolkit</h3>
+      <p>Practical tools that survive contact with reality. Quick tests, journals, pre-mortems, six worked examples, and how to deploy an LLM.</p>
+      <div class="topics">Six tests · journal · pre-mortem · six worked examples · LLM prompts</div>
+    </a>
+    <a href="#mod5" class="overview-card">
+      <div class="oc-num">MODULE 05</div>
+      <h3>The deeper game</h3>
+      <p>Your decisions happen inside systems where others adapt too. Game theory, complex systems, evolution, antifragility.</p>
+      <div class="topics">Incentives · Nash · Moloch · emergence · evolution · antifragility</div>
+    </a>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     MODULE 01 — WHY YOUR BRAIN LIES TO YOU
+     ============================================================ -->
+<section class="module" id="mod1">
+  <div class="module-num-wrap">
+    <div class="module-label">Module · One</div>
+    <div class="module-num">01</div>
+  </div>
+  <div class="module-body">
+    <h2>Why your brain <span class="accent">lies</span> to you.</h2>
+    <p class="module-intro">Your intuitions are unreliable in predictable ways. Here's why &mdash; and what to do about it.</p>
+    <div class="promise">By the end of this module</div>
+    <p>You'll be able to name two specific cognitive failures by their proper names, catch your brain doing each of them on a fresh example, and explain why "just be more careful" doesn't fix any of it.</p>
+  </div>
+</section>
+
+<h3 id="p1-built"><span class="h3-num">01.1</span>Built for a different world</h3>
+
+<div class="row">
+<p>Your brain is an extraordinary machine. It recognizes faces in milliseconds, navigates complex social dynamics, and processes sensory information at speeds no computer can match. But it was built for a different world &mdash; one of immediate physical threats, small tribal groups, and concrete, observable reality.</p>
+<aside class="sidenote"><span class="sn-label">For beginners</span>You don't need to memorize the bias names. What matters is the habit of catching your brain when it feels certain on a question where it has no business being certain.</aside>
+</div>
+
+<p>The modern world demands something very different: evaluating probabilities, reasoning about invisible risks, thinking in large numbers, and making decisions under radical uncertainty. We are, as one researcher put it, <span class="mark">powerful parallel-processing engines designed for social navigation, but terribly built for manipulating abstract symbols</span>.</p>
+
+<p>This mismatch isn't a character flaw. It's a design constraint. Evolution optimized your ancestors for survival on the African savannah roughly 200,000 years ago, not for evaluating stock portfolios or choosing between career paths. The result is a brain that makes systematic errors in <em>predictable directions</em> &mdash; errors you can learn to see, and then correct.</p>
+
+<h3 id="p1-speeds"><span class="h3-num">01.2</span>Two speeds of thinking</h3>
+
+<p>Your brain operates in two fundamentally different modes. The <strong>fast mode</strong> is intuitive, automatic, and effortless &mdash; it's what recognizes faces, reads emotions, and tells you to duck when something flies at your head. It handles roughly 95% of daily life brilliantly.</p>
+
+<div class="row">
+<p>The <strong>slow mode</strong> is deliberate, calculating, and effortful &mdash; it's what you use for mental arithmetic, careful analysis, and weighing complex tradeoffs. It's powerful but lazy. It takes real metabolic energy to engage, which is why your brain defaults to fast mode whenever it can get away with it.</p>
+<aside class="sidenote"><span class="sn-label">Heads up</span>Kahneman's "System 1 / System 2" framing is a useful metaphor, not literal brain anatomy. Don't take the map for the territory.</aside>
+</div>
+
+<p>The problem: fast mode fails catastrophically on exactly the questions that matter most for decisions &mdash; probability, risk, complex tradeoffs. And because it operates automatically, you rarely notice when it's steering you wrong.</p>
+
+<div class="callout example">
+<div class="callout-title">Example · The Linda problem</div>
+<p><em>Linda is thirty-one years old, single, outspoken, and very bright. She majored in philosophy. As a student, she was deeply concerned with issues of discrimination and social justice.</em></p>
+<p>Which is more probable? <strong>(A)</strong> Linda is a bank teller. <strong>(B)</strong> Linda is a bank teller <em>and</em> is active in the feminist movement.</p>
+<p>Roughly 85% of participants chose B in Kahneman and Tversky's original 1983 study. But it's mathematically impossible &mdash; "bank teller AND feminist" is always a subset of "bank teller." B can never be more likely than A. People choose it because the story is more <em>coherent</em>, and our brains prioritize narrative plausibility over mathematical consistency.</p>
+</div>
+
+<div class="callout example">
+<div class="callout-title">Example · The malaria test</div>
+<p>1% of a country's population has malaria. A test gives an accurate result 90% of the time. You test positive. What's the probability you actually have malaria?</p>
+<p>If you guessed 90%, you've ignored the <strong>base rate</strong>. In a population of 1,000: ~10 actually have malaria (9 test positive correctly), and ~990 don't (99 get false positives). Total positives: 108. Real probability: <span class="mark-bold">about 8.3%</span> &mdash; an order of magnitude below what most people guess, including many doctors. We'll come back to this with a calculator in Module 02.</p>
+</div>
+
+<h3 id="p1-anchor"><span class="h3-num">01.3</span>Anchoring &mdash; see it happen to you</h3>
+
+<p>One of the strangest things about your brain is how easily a completely irrelevant number can move your estimate of something else. In Kahneman and Tversky's classic 1974 experiment, participants spun a rigged wheel that landed on either 10 or 65. Then they were asked: <em>What percentage of African countries are in the UN?</em></p>
+
+<div class="datapoint">
+  <div class="dp-num">25<span style="font-size:1.4rem">%</span></div>
+  <div class="dp-text">Median estimate from people who saw <strong>"10"</strong> on the wheel</div>
+</div>
+
+<div class="datapoint">
+  <div class="dp-num">45<span style="font-size:1.4rem">%</span></div>
+  <div class="dp-text">Median estimate from people who saw <strong>"65"</strong> on the wheel</div>
+</div>
+
+<p>The wheel was obviously random. The number had nothing to do with Africa. Everyone knew this. <span class="mark">It moved their answers by 20 percentage points anyway.</span></p>
+
+<!-- ANCHORING WIDGET -->
+<div class="widget" id="anchorWidget">
+  <h4>Anchoring demo &mdash; try it on yourself</h4>
+  <p class="widget-desc">Pick a button below. Then, before reading further, hold a guess in your head for: <em>What's the population of Mongolia, in millions?</em></p>
+
+  <div class="anchor-choice-row">
+    <div class="anchor-btn" data-anchor="2"><div class="ab-num">2</div><div class="ab-label">Small number</div></div>
+    <div class="anchor-btn" data-anchor="80"><div class="ab-num">80</div><div class="ab-label">Big number</div></div>
+  </div>
+
+  <div class="widget-row single">
+    <div class="widget-field">
+      <label>Your guess (population in millions)</label>
+      <input type="number" id="anchorGuess" placeholder="e.g. 5" step="0.1" min="0">
+    </div>
+  </div>
+
+  <button id="anchorReveal">Reveal</button>
+
+  <div class="widget-output" id="anchorOut" style="display:none;">
+    <div class="out-label">The actual answer</div>
+    <div class="out-value">3.4 million</div>
+    <div class="out-secondary" id="anchorMsg"></div>
+  </div>
+</div>
+
+<div class="callout mistake">
+<div class="callout-title">Common mistake</div>
+<p>Reading the Linda problem, feeling embarrassed at being "tricked," and treating it as a one-off party trick. The whole point is that the same machinery runs constantly &mdash; when you read the news, when you size up a colleague, when you decide whether to trust a memory. Linda is a microscope, not a magic trick.</p>
+</div>
+
+<div class="callout beginner">
+<div class="callout-title">Mental model · The map is not the territory</div>
+<p>Every model, framework, and shortcut in this manual is a simplification. No single lens captures reality. The drunkard searches for his keys under the streetlamp not because he dropped them there, but because the light is better. The goal isn't to find the One True Model &mdash; it's to have enough lenses to triangulate from multiple angles.</p>
+</div>
+
+<h3 id="p1-replication"><span class="h3-num">01.4</span>A note on the replication crisis</h3>
+
+<p>Several famous results in behavioral economics have not held up under scrutiny. <strong>Ego depletion</strong> (the idea that willpower is a finite battery), <strong>large-scale priming effects</strong>, and several <strong>power-posing</strong> and <strong>stereotype-threat</strong> findings have either failed to replicate or shrunk dramatically once researchers tightened their methods. In 2017, Kahneman himself acknowledged he had <em>"placed too much faith in underpowered studies"</em> in <em>Thinking, Fast and Slow</em>.</p>
+
+<div class="row">
+<p>The big-picture biases survive replication: anchoring, base-rate neglect, framing effects, loss aversion, overconfidence. The fine texture of <em>specific</em> studies does not. The lesson isn't to throw out the field &mdash; it's to hold every confident claim, including the ones in this manual, with a little less grip than you would if you didn't know about the crisis. <span class="mark">Calibration applies to the literature too.</span></p>
+<aside class="sidenote"><span class="sn-label">Why this matters</span>If you've ever felt a flicker of doubt about a TED-talk-famous result, trust it. Healthy doubt is the skill being trained here.</aside>
+</div>
+
+<p>You now know the software is buggy. Here's the upgraded operating system.</p>
+
+<div class="callout try">
+<div class="callout-title">Try this today</div>
+<p>Pick one belief you hold with high confidence &mdash; about a person, a market, a piece of news. Ask: "What specifically would have to be true for this belief to be wrong, and have I checked it?" Most strong beliefs collapse on first contact with that question.</p>
+</div>
+
+<div class="divider"><span class="divider-text">End · Module 01</span></div>
+
+
+<!-- ============================================================
+     MODULE 02 — SEEING CLEARLY
+     ============================================================ -->
+<section class="module" id="mod2">
+  <div class="module-num-wrap">
+    <div class="module-label">Module · Two</div>
+    <div class="module-num">02</div>
+  </div>
+  <div class="module-body">
+    <h2>Seeing <span class="accent">clearly</span>.</h2>
+    <p class="module-intro">Before you can decide well, you need to see well. How to think about evidence.</p>
+    <div class="promise">By the end of this module</div>
+    <p>You'll be able to quantify how new evidence should change your beliefs, recognize three distinct ways "correlation ≠ causation" usually shows up, and know whether your 80%-confident predictions actually come true 80% of the time.</p>
+  </div>
+</section>
+
+<h3 id="p2-updating"><span class="h3-num">02.1</span>Updating your beliefs</h3>
+
+<p>Every belief you hold is probabilistic &mdash; never 0%, never 100%. The discipline of good thinking is updating your beliefs <em>proportionally</em> to how diagnostic the new evidence actually is. Not too stubborn (anchoring to your first impression), not too reactive (overweighting whatever you heard last).</p>
+
+<div class="row">
+<p>When new information arrives, the right question is: <em>"How much more likely would I be to see this evidence in the world where my belief is true, versus the world where it's false?"</em> If the evidence is equally likely in both worlds, it tells you nothing. If it's dramatically more likely in one, update significantly.</p>
+<aside class="sidenote"><span class="sn-label">The whole game</span>One sentence to keep: <em>evidence is only as strong as the ratio between how expected it would be if you're right versus if you're wrong.</em></aside>
+</div>
+
+<div class="callout example">
+<div class="callout-title">The equivalent bet test</div>
+<p>A fast way to check if you actually believe what you claim to believe: translate it to a bet. "I'm 90% sure we'll hit our target" — would you bet $900 to win $100? If that feels too risky, your true confidence is lower than your stated confidence. Most people's "80% confident" crumbles under this test.</p>
+</div>
+
+<h3 id="p2-bayes"><span class="h3-num">02.2</span>Bayes, properly</h3>
+
+<p>The Linda and malaria problems above are Bayes problems. The full statement in plain English: your <strong>posterior</strong> belief (after evidence) is your <strong>prior</strong> belief (before evidence) multiplied by the <strong>likelihood ratio</strong> &mdash; how much more probable the evidence is in a world where you're right versus a world where you're wrong.</p>
+
+<div class="formula-block">
+posterior odds &nbsp; = &nbsp; prior odds &nbsp; × &nbsp; likelihood ratio<br>
+where &nbsp; LR &nbsp; = &nbsp; P(evidence | hypothesis true) &nbsp; / &nbsp; P(evidence | hypothesis false)
+</div>
+
+<p>The likelihood ratio is the part most people skip. A "positive test" sounds damning until you ask: <em>how often does this test also come back positive when the person doesn't have the disease?</em> An LR of 10 is a strong update. An LR of 2 is a nudge. An LR of 1 is noise dressed as signal.</p>
+
+<div class="row">
+<p>You don't need to do this on paper for every belief &mdash; that would be exhausting. The practical move is to internalize the <em>structure</em>: prior + likelihood ratio = posterior. When someone presents you with a striking piece of evidence, the reflex question becomes <span class="mark">"how often would this happen anyway?"</span> &mdash; and that one question kills more bad conclusions than any other.</p>
+<aside class="sidenote"><span class="sn-label">For beginners</span>The calculator below lets you play with the malaria problem. Try a 90% accurate test on a 1% disease, then on a 50% disease. The same test gives wildly different answers depending on the prior. That's the whole lesson.</aside>
+</div>
+
+<!-- BAYES WIDGET -->
+<div class="widget" id="bayesWidget">
+  <h4>Bayes calculator</h4>
+  <p class="widget-desc">Set a prior, a sensitivity (true positive rate), and a false positive rate. The posterior is what you should believe after a positive test. Move the sliders &mdash; the answer updates live.</p>
+
+  <div class="widget-row three">
+    <div class="widget-field">
+      <label>Prior · base rate</label>
+      <input type="range" id="bayesPrior" min="0.1" max="99" step="0.1" value="1">
+      <div class="widget-suffix"><span id="bayesPriorVal">1.0</span>% have the condition</div>
+    </div>
+    <div class="widget-field">
+      <label>Sensitivity</label>
+      <input type="range" id="bayesSens" min="50" max="100" step="0.5" value="90">
+      <div class="widget-suffix"><span id="bayesSensVal">90</span>% true positive rate</div>
+    </div>
+    <div class="widget-field">
+      <label>False positive rate</label>
+      <input type="range" id="bayesFpr" min="0.1" max="50" step="0.1" value="10">
+      <div class="widget-suffix"><span id="bayesFprVal">10.0</span>% test wrong</div>
+    </div>
+  </div>
+
+  <div class="widget-output">
+    <div class="out-label">Posterior · actually have it, given positive test</div>
+    <div class="out-value"><span id="bayesPosterior">8.3</span>%</div>
+    <div class="widget-bar-viz"><div class="bar-fill" id="bayesBar" style="width: 8.3%"></div></div>
+    <div class="out-secondary" id="bayesExplain">Of 10,000 people: ~100 have it (90 test positive) and ~9,900 don't (990 false positives). 90 ÷ 1,080 ≈ 8.3%.</div>
+  </div>
+</div>
+
+<h3 id="p2-signal"><span class="h3-num">02.3</span>Signal vs noise</h3>
+
+<p>The world generates more data every day, but very little of it is information. We are pattern-seeking animals &mdash; when information is sparse, we see patterns that don't exist. Horoscopes, superstitions, the "hot hand" in basketball (well, mostly &mdash; see below), stock-chart reading: noise dressed up as signal.</p>
+
+<p>The practical discipline: in noisy domains (which is most of the real world), <span class="mark">simple models beat complex ones</span>. The forecaster who uses three variables outperforms the one who uses thirty &mdash; because the extra variables are fitting noise, not signal.</p>
+
+<div class="callout beginner">
+<div class="callout-title">A real twist · The hot hand reversal</div>
+<p>For thirty years, the "hot hand fallacy" &mdash; the idea that streak-shooting in basketball is an illusion &mdash; was a textbook example of how humans see patterns in randomness. In 2018, Joshua Miller and Adam Sanjurjo showed the original 1985 analysis contained a subtle statistical error. Correctly analyzed, players really do shoot better after a string of makes. The illusion was in the analysis, not in the streaks.</p>
+<p>This is not a license to trust your gut on patterns. It is a reminder that the literature itself needs the same Bayesian treatment as everything else. Sometimes the consensus is the bias.</p>
+</div>
+
+<h3 id="p2-causation"><span class="h3-num">02.4</span>Correlation is not causation</h3>
+
+<p>This is the foundational statistical sin, and even very smart people commit it constantly. When A and B move together, there are at least four possibilities: A causes B, B causes A, some hidden third thing C causes both, or it's pure coincidence.</p>
+
+<div class="callout example">
+<div class="callout-title">Three ways correlation lies</div>
+<p><strong>Confounders.</strong> Ice cream sales and drowning deaths spike together every summer. Neither causes the other &mdash; summer heat drives both.</p>
+<p><strong>Reverse causation.</strong> Married people are healthier than unmarried people. Does marriage improve health? Or do healthier people marry more easily? Probably both — but the intervention implications are completely different.</p>
+<p><strong>Simpson's paradox.</strong> UC Berkeley was sued for gender discrimination because overall admission rates were higher for men. But examined department by department, women were admitted at equal or higher rates in most departments. Women applied disproportionately to competitive departments, skewing the aggregate. The "overall" number was misleading.</p>
+</div>
+
+<h3 id="p2-narrative"><span class="h3-num">02.5</span>The narrative fallacy</h3>
+
+<p>Humans compulsively construct causal stories from random sequences. The story always "makes sense" in retrospect, which tricks us into thinking we understood it &mdash; or could have predicted it &mdash; all along.</p>
+
+<div class="row">
+<p>Every post-mortem is contaminated by this. The past looks ordered because we impose narrative on it. "The 2008 crisis happened because of subprime mortgages, deregulation, and greed." This sounds explanatory. But in 2006, the same facts existed and almost no one predicted the crisis. The narrative was constructed after the fact.</p>
+<aside class="sidenote"><span class="sn-label">Test</span>Read a confident historical explanation. Ask: would someone with this information in 1995 have predicted what happened? If not, the explanation is a story, not a model.</aside>
+</div>
+
+<div class="pullquote">
+<p>We tell ourselves stories explaining our actions, but are they all illusions? In reality, there are many overlapping stories for any single action.</p>
+<cite>Nassim Nicholas Taleb · The Black Swan</cite>
+</div>
+
+<h3 id="p2-regression"><span class="h3-num">02.6</span>Regression to the mean</h3>
+
+<p>Extreme results are partly skill and partly luck. Since the luck portion doesn't repeat, extreme performances are naturally followed by less extreme ones. This is not a mysterious force &mdash; it's simple statistics. But we chronically mistake it for a real phenomenon.</p>
+
+<p>The Sports Illustrated "cover jinx": athletes on the cover tend to perform worse afterward. Not because of a curse — they made the cover <em>because</em> of an unusually good stretch. Some of that was luck, and luck doesn't persist.</p>
+
+<div class="callout warning">
+<div class="callout-title">Why this matters for decisions</div>
+<p>If you reward someone after an exceptional quarter and they regress, you'll conclude the reward was irrelevant. If you punish someone after a terrible quarter and they improve, you'll conclude the punishment worked. Both are just regression to the mean. <span class="mark">Over time, you'll systematically conclude that punishment works and reward doesn't — which is exactly backwards.</span></p>
+</div>
+
+<h3 id="p2-fattails"><span class="h3-num">02.7</span>Fat tails &mdash; when averages lie</h3>
+
+<p>Heights follow a bell curve &mdash; most people cluster around the average, and extreme heights are vanishingly rare. This is because your height doesn't affect my height. The events are independent.</p>
+
+<p>But wealth, book sales, city sizes, startup returns, viral content, and pandemic deaths follow <strong>fat-tailed</strong> distributions &mdash; where events are causally linked. More popular songs get more notice, which makes them even more popular. The rich get richer. <span class="mark">The extreme event dominates the total.</span></p>
+
+<div class="diagram">
+<div class="diagram-title">Bell curve vs fat tail</div>
+<svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg">
+  <line x1="40" y1="200" x2="560" y2="200" stroke="#6a6657" stroke-width="1"/>
+  <line x1="40" y1="40" x2="40" y2="200" stroke="#6a6657" stroke-width="1"/>
+  <path d="M 60 195 Q 160 195 220 170 Q 280 60 340 170 Q 400 195 540 195"
+        fill="none" stroke="#2a4d7e" stroke-width="2.4"/>
+  <text x="260" y="80" font-family="Inter, sans-serif" font-weight="600" font-size="13" fill="#2a4d7e">Bell curve · independent events</text>
+  <path d="M 60 198 Q 80 198 100 120 Q 140 60 180 130 Q 230 175 540 192"
+        fill="none" stroke="#0e5b66" stroke-width="2.4"/>
+  <text x="245" y="155" font-family="Inter, sans-serif" font-weight="600" font-size="13" fill="#0e5b66">Fat tail · causally linked</text>
+  <text x="465" y="215" font-family="JetBrains Mono, monospace" font-size="9" fill="#c25e16"><tspan x="465" dy="0">extreme tail</tspan><tspan x="465" dy="11">dominates</tspan></text>
+  <text x="295" y="225" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">VALUE</text>
+  <text x="22" y="115" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" transform="rotate(-90, 22, 115)">FREQ</text>
+</svg>
+<div class="diagram-caption">Same axes, completely different game.</div>
+</div>
+
+<p>Put Bill Gates in a room with 99 random Americans, and the "average" net worth is ~$1 billion. That tells you about one person, not the room. If you're operating in a fat-tailed domain, strategies built on averages will fail. Venture capital doesn't need most investments to work &mdash; one 100× return drives the fund. Risk management can't use standard deviation &mdash; a single event can exceed all previous events combined.</p>
+
+<div class="callout mistake">
+<div class="callout-title">Common mistake</div>
+<p>People confidently apply bell-curve intuitions to fat-tailed domains: career income, social-media reach, the next epidemic, AI breakthroughs. "It hasn't happened in the last ten years, so it won't" is sound reasoning in a bell-curve world and catastrophic reasoning in a fat-tailed one. <em>Know which world you're in before you reach for a tool.</em></p>
+</div>
+
+
+<h3 id="p2-biases"><span class="h3-num">02.8</span>Key biases &amp; their antidotes</h3>
+
+<p><strong>Anchoring.</strong> The first number you encounter biases all subsequent estimates &mdash; even when it's completely irrelevant. You just saw this happen to you in the Mongolia widget above. <em>Antidote:</em> generate your own estimate before seeing anyone else's.</p>
+
+<p><strong>Loss aversion &amp; prospect theory.</strong> Losses hurt roughly 2× more than equivalent gains feel good. But it goes deeper: we're risk-seeking in the domain of losses and risk-averse in the domain of gains. This is why founders whose startups are failing take increasingly reckless bets ("we're already down, might as well swing big") while successful founders play it too safe.</p>
+
+<div class="diagram">
+<div class="diagram-title">Prospect theory · the value function</div>
+<svg viewBox="0 0 600 240" xmlns="http://www.w3.org/2000/svg">
+  <line x1="300" y1="20" x2="300" y2="220" stroke="#6a6657" stroke-width="1"/>
+  <line x1="40" y1="120" x2="560" y2="120" stroke="#6a6657" stroke-width="1"/>
+  <path d="M 300 120 Q 380 90 460 75 T 550 65" fill="none" stroke="#2d6a31" stroke-width="2.6"/>
+  <path d="M 300 120 Q 250 165 200 195 T 50 218" fill="none" stroke="#b03020" stroke-width="2.6"/>
+  <text x="475" y="58" font-family="Inter, sans-serif" font-weight="600" font-size="12" fill="#2d6a31">Gains · diminishing</text>
+  <text x="65" y="180" font-family="Inter, sans-serif" font-weight="600" font-size="12" fill="#b03020">Losses hurt ~2× more</text>
+  <text x="540" y="135" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657">GAINS →</text>
+  <text x="45" y="115" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657">← LOSSES</text>
+  <text x="305" y="30" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657">VALUE</text>
+</svg>
+<div class="diagram-caption">The kink at zero is loss aversion. The curvature is what makes people irrational on both sides.</div>
+</div>
+
+<p><strong>Availability heuristic.</strong> We overweight vivid, recent, or emotionally charged information. After 9/11, many Americans switched from flying to driving. The resulting increase in car-accident deaths — an estimated 1,595 additional fatalities — exceeded the number who died on the four hijacked flights. <span class="mark">The vivid low-probability risk displaced the mundane high-probability one.</span></p>
+
+<p><strong>Survivorship bias.</strong> We study successes because failures are invisible. "College dropouts like Gates and Zuckerberg became billionaires, so maybe dropping out is viable." For every dropout billionaire, there are millions you never hear about who earn less than graduates. During WWII, the military examined bullet holes on returning bombers to decide where to add armor. Abraham Wald realized: the holes show where planes can take damage <em>and survive</em>. The armor was needed where the holes weren't &mdash; those planes never came back.</p>
+
+<p><strong>Confirmation bias.</strong> We search for evidence that confirms our beliefs, not evidence that tests them. This is doubly dangerous because it's invisible &mdash; you feel like you're doing research when you're really building a case.</p>
+
+<div class="row">
+<p><strong>The lollapalooza effect.</strong> Charlie Munger's term for when 3-5 biases push the same direction simultaneously. The combined force is explosive &mdash; far greater than any single bias. The dot-com bubble: social proof + envy + incentive-caused bias + loss aversion. No single bias explains the mania; the combination does. Whenever you see extreme collective behavior &mdash; bubbles, panics, cults &mdash; look for the lollapalooza.</p>
+<aside class="sidenote"><span class="sn-label">2026 lens</span>Recent crypto cycles, NFT mania, and AI hype waves all fit the pattern. Not because the underlying tech is fake, but because the lollapalooza overshoots the underlying truth by an order of magnitude.</aside>
+</div>
+
+<h3 id="p2-loss"><span class="h3-num">02.9</span>Loss aversion &mdash; calibrate your own ratio</h3>
+
+<p>The headline result &mdash; "losses hurt about 2× more than equivalent gains" &mdash; is a population average. Your personal ratio is your own. Let's measure it.</p>
+
+<!-- LOSS AVERSION WIDGET -->
+<div class="widget" id="lossWidget">
+  <h4>Would you take this bet?</h4>
+  <p class="widget-desc">A fair coin will be flipped. <strong>If it lands heads</strong>, you win the amount on the slider. <strong>If it lands tails</strong>, you lose $100. Move the slider to the smallest win amount at which you'd take the bet. (Be honest — imagine the money is real.)</p>
+
+  <div class="widget-row single">
+    <div class="widget-field">
+      <label>Win amount on heads</label>
+      <input type="range" id="lossWin" min="100" max="500" step="10" value="200">
+      <div class="widget-suffix">$<span id="lossWinVal">200</span> · loss on tails is fixed at $100</div>
+    </div>
+  </div>
+
+  <button id="lossCalc">Show what this reveals</button>
+
+  <div class="widget-output" id="lossOut" style="display:none;">
+    <div class="out-label">Your loss-to-gain ratio</div>
+    <div class="out-value"><span id="lossRatio">2.0</span>×</div>
+    <div class="out-secondary" id="lossInterpret"></div>
+  </div>
+</div>
+
+<h3 id="p2-calibration"><span class="h3-num">02.10</span>Calibration &mdash; knowing what you don't know</h3>
+
+<p>When you say "I'm 80% sure," are you right 80% of the time? Research by Philip Tetlock found that <span class="mark">most people's 90%-confident predictions come true only about 70% of the time</span>. We are systematically overconfident.</p>
+
+<p>Calibration &mdash; the skill of making your stated confidence match your actual accuracy &mdash; is trainable. It's the single biggest differentiator between superforecasters (the top 2% of predictors) and everyone else. The practice is simple: make specific predictions with explicit confidence levels, write them down, then track how often you're right at each confidence level.</p>
+
+<p>An underrated benefit: granularity forces thinking. Asking <em>"Is this 60% likely or 65%?"</em> forces deeper analysis than "Is this likely or unlikely?" Coarse buckets let you hide from precision.</p>
+
+<h3 id="p2-tournaments"><span class="h3-num">02.11</span>Forecasting tournaments &amp; Brier scores</h3>
+
+<p>Until about 2010, calibration was something you trained alone in a notebook. That has changed. Public forecasting platforms &mdash; Metaculus, Manifold Markets, the Good Judgment Open &mdash; let anyone bet (with play money or real money) on real-world questions and see their score against thousands of other forecasters. <em>This is the closest thing we have to a gym for the skill of being right.</em></p>
+
+<div class="row">
+<p>The standard scoring is the <strong>Brier score</strong>: the mean squared error between your probability and the outcome (1 if it happened, 0 if it didn't). A perfect forecaster has a Brier of 0. Always saying 50% gives 0.25. Top superforecasters score around 0.15. The point isn't the number &mdash; it's that the number exists, gets worse when you bullshit, and gets better when you actually think.</p>
+<aside class="sidenote"><span class="sn-label">Try one</span>Pick three real-world questions on a forecasting site this week. Put numbers on them. You'll learn more in a month than in a year of reading.</aside>
+</div>
+
+<p>Tetlock's "ten commandments" of superforecasters compress to a few habits worth memorizing: triage your effort to questions you can actually move on, break hard problems into tractable sub-questions, balance the inside view (this specific case) with the outside view (the reference class), update <em>often but in small steps</em>, look hard for the strongest case <em>against</em> your view, and distinguish your degree of confidence from the degree of consensus.</p>
+
+<!-- CALIBRATION WIDGET -->
+<div class="widget" id="calibWidget">
+  <h4>Calibration self-test</h4>
+  <p class="widget-desc">For each question, give a <strong>90% confidence interval</strong> &mdash; a low and high estimate you're 90% sure contains the right answer. If you're well-calibrated, you'll get about 9 out of 10 right. Most people get 3 to 5. Be honest; the test is for you.</p>
+
+  <div id="calibQuestions"></div>
+
+  <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem;">
+    <button id="calibSubmit">Score me</button>
+    <button class="secondary" id="calibReset">Reset</button>
+  </div>
+
+  <div class="widget-output" id="calibResult" style="display: none;">
+    <div class="out-label">Your calibration</div>
+    <div class="out-value"><span id="calibScore">—</span> / 10</div>
+    <div class="out-secondary" id="calibInterpret"></div>
+  </div>
+</div>
+
+<h3 id="p2-outside"><span class="h3-num">02.12</span>The outside view</h3>
+
+<p>This is perhaps the single most powerful debiasing technique. Instead of building up your estimate from the specific details of your situation (the "inside view"), start with how similar situations actually turned out historically (the "outside view").</p>
+
+<p>"My startup will succeed because our product is great" &mdash; inside view. "<span class="mark">90% of startups fail. What specifically makes us an exception?</span>" &mdash; outside view.</p>
+
+<div class="row">
+<p>The Sydney Opera House was estimated at 4 years and $7 million. It took 16 years and $102 million. That's not unusual &mdash; that's the base rate for megaprojects. Kahneman himself was on a team estimating completion of a curriculum project. His team's inside estimate: 2 years. The reference class of similar projects: 7-10 years average. It took 8 years.</p>
+<aside class="sidenote"><span class="sn-label">The 2023 update</span>Bent Flyvbjerg's <em>How Big Things Get Done</em> turned the outside view into a methodology: "reference-class forecasting." For any project, find the empirical distribution of how similar projects actually went, and start your estimate from that distribution, not from your plan.</aside>
+</div>
+
+<p>The deeper point: when you're forecasting your own situation, your brain is generating an inside-view estimate by default, with all of the optimism that entails. The outside view is not a different opinion &mdash; it's a different <em>method</em>. Use both, and weight the outside view harder than feels comfortable.</p>
+
+<h3 id="p2-scout"><span class="h3-num">02.13</span>Soldier vs scout mindset</h3>
+
+<p>Julia Galef draws a sharp distinction between two reasoning modes. The <strong>soldier</strong> treats reasoning as defensive combat: <em>"Can I believe this? Must I believe this?"</em> The goal is to defend existing positions. The <strong>scout</strong> treats reasoning as mapmaking: <em>"Is this true?"</em> The goal is accuracy, even when it's uncomfortable.</p>
+
+<p>The deepest insight: the root cause of soldier mindset isn't lazy thinking &mdash; it's <strong>identity</strong>. When a belief becomes part of who you are ("I'm the kind of person who…"), updating it feels like self-destruction. The more you've staked your identity on a position, the harder it becomes to see evidence against it.</p>
+
+<div class="callout example">
+<div class="callout-title">Quick tests for motivated reasoning</div>
+<p>· "If my political opponent held this view, would I find the arguments convincing?"</p>
+<p>· "If the evidence pointed the other way, would I accept it?"</p>
+<p>· "If I had zero ego investment in this position, what would I believe?"</p>
+</div>
+
+<h3 id="p2-steel"><span class="h3-num">02.14</span>Steelmanning &amp; the Ideological Turing Test</h3>
+
+<p>The move beyond scout mindset: actively construct the strongest version of the position you disagree with. This is <strong>steelmanning</strong> &mdash; the opposite of strawmanning. The bar is not "can I describe their view?" but "could a smart proponent of their view recognize my summary as the strongest version of their case?"</p>
+
+<div class="row">
+<p>Bryan Caplan's <strong>Ideological Turing Test</strong> formalizes this: can you state the opposing view so convincingly that a sincere proponent would mistake you for one of them? If you can't, you don't understand the position well enough to disagree with it productively. You're disagreeing with a caricature.</p>
+<aside class="sidenote"><span class="sn-label">Hard version</span>For one belief you hold strongly, write a 500-word essay arguing the opposite &mdash; good enough that someone who actually holds that view would nod along. Most people find this nearly impossible. That's the diagnosis.</aside>
+</div>
+
+<div class="callout warning">
+<div class="callout-title">Epistemic learned helplessness</div>
+<p>Scott Alexander's observation: smart people are dangerous to themselves because they can be argued into almost anything. A brilliant rhetorician with a wrong view can run circles around you in real time &mdash; and feeling outmatched in conversation is not evidence that they're correct. Most stable adults eventually develop a learned helplessness around clever arguments: "I can't refute it, but I'm also not going to update much on it." This is the right move when you're outside your circle of competence. It's not anti-intellectual; it's a base-rate response to the fact that being out-argued has almost no correlation with being wrong.</p>
+</div>
+
+<p>You now have sharper perception than 95% of people. But seeing clearly isn't the same as choosing well. Models describe reality &mdash; they don't tell you what to do. Let's cross from thinking to deciding.</p>
+
+<div class="callout try">
+<div class="callout-title">Try this today</div>
+<p>Open Metaculus or Manifold Markets. Find three questions resolving in the next 90 days that you care about. Put a probability on each &mdash; not "likely / unlikely" but a number. Set a reminder to check the outcomes. You're now a forecaster.</p>
+</div>
+
+<div class="divider"><span class="divider-text">End · Module 02</span></div>
+
+
+<!-- ============================================================
+     MODULE 03 — CHOOSING WELL
+     ============================================================ -->
+<section class="module" id="mod3">
+  <div class="module-num-wrap">
+    <div class="module-label">Module · Three</div>
+    <div class="module-num">03</div>
+  </div>
+  <div class="module-body">
+    <h2>Choosing <span class="accent">well</span>.</h2>
+    <p class="module-intro">How to actually make better decisions — including what the great investors know about it.</p>
+    <div class="promise">By the end of this module</div>
+    <p>You'll be able to separate decision quality from outcome quality, size a bet so you can't be ruined by one bad result, know when to keep going versus when to quit, and apply the wisdom that gets refined by allocating real capital.</p>
+  </div>
+</section>
+
+<h3 id="p3-resulting"><span class="h3-num">03.1</span>Resulting</h3>
+
+<p>Here is the core principle of good decision-making: <strong>decisions are the product of skill and luck.</strong> That's all there is to it.</p>
+
+<p><strong>Resulting</strong> is the tendency to evaluate a decision based on its outcome, without accounting for luck. We do this constantly and unconsciously. If a decision worked out, it was a "good decision." If it didn't, it was bad. But this confuses two very different things.</p>
+
+<div class="diagram">
+<div class="diagram-title">Decision quality × outcome — the resulting matrix</div>
+<svg viewBox="0 0 540 320" xmlns="http://www.w3.org/2000/svg">
+  <rect x="100" y="40" width="400" height="240" fill="none" stroke="#6a6657" stroke-width="1"/>
+  <line x1="300" y1="40" x2="300" y2="280" stroke="#6a6657" stroke-width="1"/>
+  <line x1="100" y1="160" x2="500" y2="160" stroke="#6a6657" stroke-width="1"/>
+
+  <text x="200" y="80" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#2d6a31" text-anchor="middle">Skill</text>
+  <text x="200" y="100" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">good decision · good outcome</text>
+  <text x="200" y="118" font-family="Inter, sans-serif" font-size="11" font-style="italic" fill="#38362d" text-anchor="middle">Repeat this.</text>
+
+  <text x="400" y="80" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#c25e16" text-anchor="middle">Dumb luck</text>
+  <text x="400" y="100" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">bad decision · good outcome</text>
+  <text x="400" y="118" font-family="Inter, sans-serif" font-size="11" font-style="italic" fill="#38362d" text-anchor="middle">Don't learn the wrong lesson.</text>
+
+  <text x="200" y="200" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#c25e16" text-anchor="middle">Bad break</text>
+  <text x="200" y="220" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">good decision · bad outcome</text>
+  <text x="200" y="238" font-family="Inter, sans-serif" font-size="11" font-style="italic" fill="#38362d" text-anchor="middle">Don't change your strategy.</text>
+
+  <text x="400" y="200" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#b03020" text-anchor="middle">Earned it</text>
+  <text x="400" y="220" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">bad decision · bad outcome</text>
+  <text x="400" y="238" font-family="Inter, sans-serif" font-size="11" font-style="italic" fill="#38362d" text-anchor="middle">Fix the process.</text>
+
+  <text x="300" y="25" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="#0e5b66" text-anchor="middle">OUTCOME →</text>
+  <text x="180" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">good</text>
+  <text x="420" y="22" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">bad</text>
+  <text x="80" y="100" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">good</text>
+  <text x="80" y="222" font-family="JetBrains Mono, monospace" font-size="9" fill="#6a6657" text-anchor="middle">bad</text>
+  <text x="50" y="160" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2" fill="#0e5b66" text-anchor="middle" transform="rotate(-90 50 160)">DECISION ↑</text>
+
+  <text x="270" y="305" font-family="Inter, sans-serif" font-style="italic" font-size="11" fill="#38362d" text-anchor="middle">Judge the column on the left. The right side is mostly noise.</text>
+</svg>
+</div>
+
+<p>The poker analogy makes this crystal clear. A good poker player doesn't ask "did I win this hand?" They ask "did I make a good bet given what I knew?" Going all-in with pocket aces and losing to a lucky flush draw &mdash; the decision was perfect. The outcome was bad. <span class="mark">If you change your strategy because you lost, you're resulting.</span></p>
+
+<div class="callout mistake">
+<div class="callout-title">Common mistake</div>
+<p>Reviewing a past decision and concluding "I should have known better" because you can see the outcome. You couldn't have known. The post-hoc clarity is the narrative fallacy working its way back into your evaluation. Ask instead: <em>given the information available at the time, was this the right move?</em></p>
+</div>
+
+<h3 id="p3-ev"><span class="h3-num">03.2</span>Thinking in bets &amp; expected value</h3>
+
+<p>Here's the fundamental reframe: <strong>every decision you make is a bet</strong>, whether you think of it that way or not. When you choose a career path, you're wagering years of your life against an uncertain outcome. When you decide to have a difficult conversation, you're betting short-term discomfort against potential long-term improvement. When you choose <em>not</em> to act, you're betting that the status quo will serve you better than the alternative.</p>
+
+<p>Most people don't think this way. They think of bets as things that happen in casinos. But the structure is identical: you're putting something at stake (time, money, energy, opportunity cost) against an uncertain outcome with some probability of different payoffs. Once you see this, the question changes from "what should I do?" to "is this a good bet?"</p>
+
+<h4>The three layers</h4>
+
+<p><strong>Layer 1 · Expand all future possibilities.</strong> Before analyzing anything, map the full range of possible outcomes &mdash; not just the ones that come to mind first. What could go right? What could go wrong? What could happen that you haven't even considered? Most people fixate on one or two scenarios. The discipline is seeing the full tree.</p>
+
+<p><strong>Layer 2 · Assign probabilities and payoffs.</strong> For each possibility, estimate two things: how likely is it (probability), and what's it worth if it happens (payoff)? Expected value is the probability-weighted sum across all outcomes.</p>
+
+<div class="formula-block">
+EV &nbsp; = &nbsp; Σ &nbsp; (probability × payoff) &nbsp; for each outcome
+</div>
+
+<p>A decision with 70% chance of gaining $50K and 30% chance of losing $10K:<br>EV = (0.7 × $50,000) + (0.3 × −$10,000) = $35,000 − $3,000 = <span class="mark"><strong>+$32,000</strong></span>.<br>This is a good bet &mdash; <em>as long as you can absorb the $10K loss if it happens</em>.</p>
+
+<p><strong>Layer 3 · Document your knowledge state.</strong> Before you decide, write down what you know, what you're uncertain about, and what you don't know at all. This is your knowledge graph &mdash; and it's what separates a thoughtful bet from a blind one. It also gives you something to review later when you're evaluating whether the decision was good, independent of the outcome.</p>
+
+<!-- EV WIDGET -->
+<div class="widget" id="evWidget">
+  <h4>Expected value + Kelly sizing</h4>
+  <p class="widget-desc">Set a bet, a probability, and your bankroll. The widget shows expected value, the Kelly-optimal bet size, and a more conservative "half Kelly" — the version professionals actually use in real life.</p>
+
+  <div class="widget-row">
+    <div class="widget-field">
+      <label>Probability of winning</label>
+      <input type="number" id="evProb" min="0" max="100" step="1" value="60">
+      <div class="widget-suffix">%</div>
+    </div>
+    <div class="widget-field">
+      <label>Bankroll</label>
+      <input type="number" id="evBank" min="0" step="100" value="10000">
+      <div class="widget-suffix">total $</div>
+    </div>
+  </div>
+
+  <div class="widget-row">
+    <div class="widget-field">
+      <label>Net payoff if you win (per $1)</label>
+      <input type="number" id="evWin" min="0" step="0.1" value="2">
+      <div class="widget-suffix">e.g. 2 means win $2 for every $1 risked</div>
+    </div>
+    <div class="widget-field">
+      <label>Loss if you lose (per $1)</label>
+      <input type="number" id="evLoss" min="0" max="1" step="0.05" value="1">
+      <div class="widget-suffix">usually 1 (lose your stake)</div>
+    </div>
+  </div>
+
+  <button id="evCalc">Calculate</button>
+
+  <div class="widget-output" id="evOut" style="display: none;">
+    <div class="out-label">Expected value per $1 risked</div>
+    <div class="out-value"><span id="evVal">+$0.80</span></div>
+    <div class="out-secondary" id="evDetail"></div>
+    <hr style="margin: 1rem 0; border: none; border-top: 1px dotted var(--rule);">
+    <div class="out-label">Kelly-optimal bet size</div>
+    <div class="out-value" id="evKelly">$4,000</div>
+    <div class="out-secondary" id="evKellyDetail"></div>
+  </div>
+</div>
+
+<h4>Portfolio thinking</h4>
+
+<p>The EV mindset gets even more powerful when you zoom out from individual decisions to your <em>portfolio</em> of decisions. Every initiative in your life is a bet on the future with three variables: potential upside, cost, and confidence.</p>
+
+<p>The insight: manage your life decisions as a portfolio, not as individual bets. You need a mix. High-confidence, low-upside bets (steady job, index funds, maintaining existing relationships) give you stability. Low-confidence, high-upside bets (side projects, career pivots, bold conversations) give you the chance of a step-change. <span class="mark">A portfolio of only "safe" bets guarantees mediocrity. A portfolio of only wild bets guarantees ruin.</span> The art is in the balance.</p>
+
+<div class="pullquote">
+<p>Everything is a bet. Decisions based on expected value. Knowing when decisions need analytical rigour and when some things are a matter of taste — that's where wisdom lives.</p>
+<cite>Annie Duke · Thinking in Bets</cite>
+</div>
+
+<h4>When EV breaks down · the variance problem</h4>
+
+<p>Two bets can have the same expected value with wildly different risk profiles. A guaranteed $100 and a 1% chance of $10,000 both have EV = $100. But if you only get to play once, they are very different decisions.</p>
+
+<p>This is the fundamental tension: EV is a guide for <em>repeated</em> decisions, not one-shot bets. A venture capitalist can afford to lose on 9 out of 10 investments because the one winner covers everything. You, making one career decision, cannot afford the same calculus. The question isn't just "is this positive EV?" but also <em>"how many times do I get to play this game, and can I survive the losses along the way?"</em></p>
+
+<p>This connects directly to risk of ruin below. <strong>The first rule of EV thinking: make sure the downside doesn't end the game.</strong></p>
+
+<h3 id="p3-doors"><span class="h3-num">03.3</span>One-way vs two-way doors</h3>
+
+<p>Jeff Bezos draws a distinction that instantly clarifies how much effort any decision deserves. <strong>Two-way doors</strong> are reversible &mdash; if it doesn't work, you can walk back through. Make these fast, with about 70% of the information you wish you had. <strong>One-way doors</strong> are irreversible &mdash; you can't easily undo them. These deserve deep, careful analysis.</p>
+
+<div class="row">
+<p>The insight: <span class="mark">roughly 90% of decisions are two-way doors that people agonize over unnecessarily.</span> Choosing a restaurant, trying a new workflow, launching a small experiment — these are all reversible. Signing a 5-year lease, choosing a co-founder, having a child — these are not. Match your decision effort to the stakes.</p>
+<aside class="sidenote"><span class="sn-label">For beginners</span>If a decision is bothering you and the answer to "could I reverse this in 3 months?" is yes — you are <em>overthinking</em>. Make a call, learn from how it goes, adjust.</aside>
+</div>
+
+<h3 id="p3-ruin"><span class="h3-num">03.4</span>Risk of ruin</h3>
+
+<p>If a bad outcome can permanently knock you out of the game, no positive expected value justifies the bet. This is the most practically important concept in risk management.</p>
+
+<p>Consider a 60/40 coin flip where you bet your entire net worth each round. Positive EV &mdash; but you'll eventually go broke with certainty, because you only need to lose once. The same logic applies to using maximum leverage in trading, startups that burn all cash on a single bet, and any strategy where a single failure is unrecoverable.</p>
+
+<div class="pullquote">
+<p>The first rule is: don't go bust. No matter how good the opportunity looks, if the worst case ends the game, walk away.</p>
+<cite>Nassim Nicholas Taleb</cite>
+</div>
+
+<p>The deeper concept is <strong>ergodicity</strong>: what happens on average across many people (the ensemble) is not the same as what happens to one person over time. Russian roulette has positive expected value across the group, but no individual should play. <span class="mark">Whenever ruin, leverage, or compounding is involved, the ensemble average can be positive while the individual time-path leads to zero.</span></p>
+
+<h3 id="p3-kelly"><span class="h3-num">03.5</span>Kelly criterion &mdash; how much to bet</h3>
+
+<p>Granted you've decided a bet is worth taking, how much should you wager? The Kelly criterion gives the mathematically optimal fraction of your bankroll to risk on any single bet, given the edge and the odds.</p>
+
+<div class="formula-block">
+Kelly fraction &nbsp; = &nbsp; (p × b − q) / b<br>
+where &nbsp; p = probability of winning, &nbsp; q = 1 − p, &nbsp; b = net payoff per unit risked
+</div>
+
+<div class="row">
+<p>Kelly maximizes the long-run growth rate of your bankroll. Bet more than Kelly suggests and growth slows (and risk of ruin climbs). Bet less and growth slows but the ride is gentler. In practice, professional bettors and investors almost always use <strong>half-Kelly</strong> or <strong>quarter-Kelly</strong> &mdash; the math is right, but estimation error in <em>p</em> means full Kelly is more aggressive than your real edge can support. The widget above does the math for you.</p>
+<aside class="sidenote"><span class="sn-label">Worth knowing</span>The same formula governs how much of your career capital to risk on any one project. Going "full Kelly" on a startup means going all-in. Half-Kelly means keeping a real fallback. Most successful career bettors are, mathematically, half-Kelly people.</aside>
+</div>
+
+<h3 id="p3-sunk"><span class="h3-num">03.6</span>Sunk costs &amp; status quo bias</h3>
+
+<p>These are the twin forces that keep people stuck in bad situations for years.</p>
+
+<p><strong>Sunk cost fallacy.</strong> Money, time, or effort already spent should not influence forward-looking decisions. "We've invested too much to stop now" &mdash; but the $5 million is gone either way. The only relevant question is: <em>"Would I invest another dollar in this if I were starting from scratch today?"</em> If the answer is no, the previous investment is irrelevant.</p>
+
+<p><strong>Status quo bias.</strong> People treat "doing nothing" as a non-decision, when it is in fact an active choice with its own expected value. Staying in a bad job isn't neutral &mdash; it's <em>choosing</em> to spend another year of your life there. Together, sunk costs and status quo bias explain why people stay in bad jobs, relationships, and investments far longer than they should.</p>
+
+<h3 id="p3-quit"><span class="h3-num">03.7</span>Kill criteria &mdash; Duke's update on sunk costs</h3>
+
+<p>The classic advice for sunk costs is "ignore them." This is correct and almost never works in practice, because by the time you're in the situation, your identity has fused with the project and you can no longer see clearly. Annie Duke's 2022 book <em>Quit</em> offers a fix that <em>does</em> work: <span class="mark"><strong>set kill criteria before you start</strong>.</span></p>
+
+<div class="row">
+<p>The move: while you're still cold and clear, decide the conditions under which you would walk away. <em>"I'll give this venture 18 months and $200K of my savings; if revenue is under $X by month 12 and our top hire has left, I quit."</em> Write it down. Tell someone. Then, when the moment arrives &mdash; and your in-the-moment self desperately wants to "give it another quarter" &mdash; the kill criteria are doing the work the calm version of you wanted done.</p>
+<aside class="sidenote"><span class="sn-label">Why this is hard</span>You will feel like the criteria don't apply to your specific situation. <em>That feeling is the bias firing.</em> The criteria were written for that feeling.</aside>
+</div>
+
+<p>The other half of the insight: <strong>quitting on time looks like quitting too early.</strong> If you wait until quitting is obviously correct, you have waited too long. The right time to quit is when the EV of continuing has gone negative &mdash; which is almost always before the situation is visibly hopeless.</p>
+
+<h3 id="p3-optionality"><span class="h3-num">03.8</span>Optionality</h3>
+
+<p>When you can't predict the future &mdash; which is always &mdash; prefer choices that keep future doors open. <strong>Optionality</strong> means nonlinear upside with capped downside.</p>
+
+<p>Taleb's <strong>barbell strategy</strong>: put 85-90% of your resources in ultra-safe positions and 10-15% in extremely speculative bets. Avoid the mediocre middle. The safe portion ensures survival; the speculative portion captures asymmetric upside. This applies far beyond finance &mdash; keep a stable income while taking wild swings on side projects. Protect the core while making bets that could change everything.</p>
+
+<h3 id="p3-stop"><span class="h3-num">03.9</span>When to stop researching and decide</h3>
+
+<p>Herbert Simon's insight: <strong>satisficers</strong> set a threshold and pick the first option that clears it. <strong>Maximizers</strong> try to find the absolute best option. Counterintuitively, satisficers are typically happier <em>and</em> make decisions that are objectively about as good &mdash; because the marginal improvement from continued searching is usually less than the cost.</p>
+
+<p>The <strong>70% rule</strong>: decide when you have 70% of the information you wish you had. A good decision now usually beats a perfect decision later. The cost of delay is real but invisible.</p>
+
+<p>Before gathering more data, ask: <em>"Would any result change my decision?"</em> If no result would change your course, the information has no decision value &mdash; and gathering it is pure procrastination.</p>
+
+<h3 id="p3-inversion"><span class="h3-num">03.10</span>Inversion</h3>
+
+<p>Charlie Munger's favorite tool, borrowed from the mathematician Jacobi: <em>"Invert, always invert."</em> Instead of asking "how do I succeed?", ask <em>"what would guarantee failure?"</em> &mdash; and avoid those things.</p>
+
+<p>The forward question is often impossibly broad. "How do I build a great company?" &mdash; hard. "What would definitely destroy one?" &mdash; easy: dishonest accounting, ignoring customers, hiring badly, running out of cash. Now just… don't do those things. <span class="mark">The inverted question is almost always more tractable and more actionable.</span></p>
+
+<h3 id="p3-regret"><span class="h3-num">03.11</span>Regret minimization</h3>
+
+<p>For the class of decisions where EV analysis doesn't help &mdash; because the options are incommensurable &mdash; Bezos offers this: project yourself to age 80 and ask which choice minimizes regret.</p>
+
+<p>This cuts through analysis paralysis by shifting from probability-weighted outcomes to identity-weighted outcomes. "Will I regret not trying this?" is a different question from "what's the expected return?" &mdash; and for career changes, relationships, and major life moves, it's often the more useful one.</p>
+
+<h3 id="p3-emotion"><span class="h3-num">03.12</span>Emotional state awareness</h3>
+
+<p>Don't make consequential decisions while emotionally activated &mdash; angry, euphoric, anxious, or grieving. Your risk tolerance shifts in ways you wouldn't endorse when calm.</p>
+
+<p>The <strong>24-hour rule</strong>: sleep on any irreversible decision. The <strong>10/10/10 framework</strong>: how will I feel about this in 10 minutes? 10 months? 10 years? Most bad decisions optimize for the 10-minute feeling. The 10-month frame almost always makes the right choice obvious.</p>
+
+<h3 id="p3-secondorder"><span class="h3-num">03.13</span>Second-order effects</h3>
+
+<p>First-order thinking: <em>"What happens if I do X?"</em> Second-order thinking: <em>"And then what happens because of that?"</em></p>
+
+<p>Rent control makes housing cheaper (first-order). Developers build less housing because returns are capped (second-order). Supply shrinks, making the shortage worse (third-order). The policy achieves the opposite of its intent at the second order.</p>
+
+<p>Almost all competitive advantage in decision-making comes from consistently thinking one or two orders ahead. <span class="mark">Most people don't get past the first.</span></p>
+
+
+<h3 id="p3-investors"><span class="h3-num">03.14</span>What the great investors know</h3>
+
+<div class="row">
+<p>There is a particular kind of decision wisdom that gets sharpened by allocating money, because the feedback is precise (the price tells you), the consequences are real (you lose actual capital), and the games run for decades. The investors who have done this best &mdash; Warren Buffett, Charlie Munger, Benjamin Graham, Howard Marks &mdash; talk about decisions in remarkably similar terms. The framing is finance-flavored, but the structure transfers to any decision where survival, patience, and consequences matter. Which is most of them.</p>
+<aside class="sidenote"><span class="sn-label">For beginners</span>Substitute "career capital," "social capital," or "the thing you're trying to build" for "money" and every idea below still works. Money is the cleanest training ground because the feedback is so precise &mdash; the lessons aren't really about money.</aside>
+</div>
+
+<p><strong>Circle of competence.</strong> Buffett's most-repeated idea: define honestly what you know and what you don't, and operate inside that boundary. <em>"The size of that circle is not very important; knowing its boundaries, however, is vital."</em> Almost every catastrophic decision is made just outside the decider's circle of competence, by someone who didn't realize they had crossed it. The practical move: write down five subjects where you can genuinely outperform an average smart person, and five where you can't but feel like you can. The trouble lives in the second list.</p>
+
+<p><strong>Margin of safety.</strong> Graham's foundational principle, inherited by Buffett. When you make a decision under uncertainty, don't aim for the boundary of what works &mdash; leave room for error. Build the bridge to carry 30,000 pounds and drive only 10,000-pound trucks across it. In investment this means buying a dollar for fifty cents. In hiring, choosing someone obviously above the bar, not just above it. In planning, assuming things take 50% longer than your honest estimate. <span class="mark">The margin isn't pessimism; it's an explicit acknowledgment that you can't model everything.</span></p>
+
+<p><strong>Mr. Market.</strong> Graham's parable, beloved of Buffett. Imagine your business has a partner named Mr. Market who shows up every day with a price at which he'll buy you out or sell you more. Some days he's euphoric and quotes wild prices; some days he's despondent and offers you bargains. The right relationship is: trade with him only when his quotes suit you. The rest of the time, ignore him.</p>
+
+<div class="row">
+<p>Most people invert this. They let Mr. Market's mood drive their decisions &mdash; buying when prices are rising (he's confident, he must be right) and selling when prices are falling (he's worried, he must know something). The discipline is to keep your own assessment of value separate from his stated price, and use the gap rather than be moved by it. The reframe extends well beyond stocks: every market &mdash; for jobs, for housing, for status, for ideas &mdash; has a Mr. Market component. Your job is not to follow his moods.</p>
+<aside class="sidenote"><span class="sn-label">Worth knowing</span>The single hardest version of this is the housing market when everyone you know is buying. The crowd is loudest exactly when the price is wrong.</aside>
+</div>
+
+<p><strong>The patience premium.</strong> <em>"The stock market is designed to transfer money from the active to the patient."</em> This is a stronger claim than it sounds. In almost any competitive game with many participants, almost everyone is optimizing for the quarter, the news cycle, the next move. Almost no one is operating on a ten-year horizon. <span class="mark">The patient player is competing in a near-empty field.</span></p>
+
+<p>Munger sharpens it: <em>"The first rule of compounding: never interrupt it unnecessarily."</em> A 10% return compounded over thirty years multiplies your money seventeen-fold. The same 10% with one panic-sell at year fifteen and a year of sitting out is meaningfully less. Most of the wealth destruction over a lifetime comes not from picking wrong but from interrupting compounding &mdash; yanking money out at the bottom, swapping a working strategy for a fashionable one, blowing up a career trajectory with one impulsive move. The same logic governs anything else that compounds: skills, relationships, reputation, health.</p>
+
+<p><strong>The punch card.</strong> Buffett's thought experiment: imagine you went through life with a card that has twenty punches on it &mdash; one for each major investment decision you're ever allowed to make. You can never get more. <em>How carefully would you choose each one?</em> The exercise reveals how much capacity for action we waste on noise. If you knew you had twenty in a lifetime, you'd wait. You'd think. You'd say no a lot. The same constraint applied to careers, partnerships, major purchases, or public statements would change them dramatically. The punch card is a reminder that the cost of a decision isn't just its outcome &mdash; it's the implicit signal that something was worth a punch.</p>
+
+<p><strong>The "too hard" pile.</strong> Munger's clearest piece of advice: when you encounter a decision you can't confidently evaluate, put it in the "too hard" pile and move on. You don't have to have a view on everything. Most decisions presented to you don't need to be made by you &mdash; and pretending they do is how confident-sounding mistakes get made. The discipline is admitting "I don't know enough to have a real view," which is socially much harder than it sounds.</p>
+
+<div class="pullquote">
+<p>It is remarkable how much long-term advantage people like us have gotten by trying to be consistently not stupid, instead of trying to be very intelligent.</p>
+<cite>Charlie Munger</cite>
+</div>
+
+<p><strong>Price is what you pay; value is what you get.</strong> Buffett's compression of the core move. Almost everyone watches the price. Almost no one independently estimates the value. The decoupling is where all the durable advantage comes from &mdash; in markets and out of them. The discipline of forming your own view of what something is worth, before you check what others are charging or paying, is the same discipline whether you're evaluating a stock, a job offer, a house, or a relationship.</p>
+
+<p><strong>Be greedy when others are fearful.</strong> The contrarian's discipline. Easier said than done because being greedy when others are fearful means making your move when everything in your social environment is telling you you're wrong. The point is not to be contrarian for its own sake &mdash; that's just a different form of conformity. The point is that crowd consensus tends to overshoot in both directions, and the best entry points feel uncomfortable. <em>If you're never uncomfortable, you're never early.</em></p>
+
+<p><strong>Rule number one: don't lose money.</strong> Buffett's two rules &mdash; rule one, never lose money; rule two, never forget rule one &mdash; sound like a joke until you connect them to ergodicity and risk of ruin from earlier in this module. The asymmetry of returns and losses is brutal: a 50% loss requires a 100% gain to recover. A 90% loss requires a 900% gain. <span class="mark">Avoiding the catastrophic loss is mathematically more valuable than capturing the spectacular gain, even when the gain has a higher expected value.</span> Survive first, then optimize. This is the single principle that connects almost every other idea in this guide.</p>
+
+<p><strong>Reputation as a long-dated position.</strong> <em>"It takes twenty years to build a reputation and five minutes to ruin it. If you think about that, you'll do things differently."</em> Reputation compounds asymmetrically &mdash; slow upside, sudden downside. The decisions that protect it (don't lie, don't cut corners, don't take credit you didn't earn) compound for decades. The decisions that destroy it can fit in a single email. Treat your name as a long-dated position you're not allowed to liquidate.</p>
+
+<div class="callout mistake">
+<div class="callout-title">Common mistake</div>
+<p>Treating these as <em>investment</em> principles rather than <em>decision</em> principles. The Buffett shelf is full of books that translate his ideas into stock-picking systems. The ideas are about something much wider &mdash; how to handle uncertainty, patience, and consequences across a lifetime. The investor-readers who do best with this material are the ones who apply it to their careers, partnerships, and time first, and to their portfolios second.</p>
+</div>
+
+<div class="callout try">
+<div class="callout-title">Try this today</div>
+<p>Pick one ongoing commitment in your life &mdash; a project, a relationship, a habit. Write down, right now, the conditions under which you'd walk away from it. Be specific: "If X is still true by Y date, I quit." That's a kill criterion. You just got better at sunk costs than 95% of people.</p>
+</div>
+
+<div class="divider"><span class="divider-text">End · Module 03</span></div>
+
+
+<!-- ============================================================
+     MODULE 04 — THE TOOLKIT
+     ============================================================ -->
+<section class="module" id="mod4">
+  <div class="module-num-wrap">
+    <div class="module-label">Module · Four</div>
+    <div class="module-num">04</div>
+  </div>
+  <div class="module-body">
+    <h2>The <span class="accent">toolkit</span>.</h2>
+    <p class="module-intro">Practical instruments that survive contact with reality. Use these.</p>
+    <div class="promise">By the end of this module</div>
+    <p>You'll have six fast tests you can run on any decision in under a minute, two printable templates to use when stakes are high, six worked examples to model from, and a working method for using a language model as a thinking partner.</p>
+  </div>
+</section>
+
+<h3 id="p4-tests"><span class="h3-num">04.1</span>Six quick tests for any decision</h3>
+
+<p>When a real decision is in front of you, you won't have time to read this manual. You need a few tests sharp enough to run in 60 seconds. These are the six I reach for most.</p>
+
+<div class="tests-grid">
+  <div class="test-card">
+    <div class="test-num">Test · 01</div>
+    <div class="test-title">The Outsider Test</div>
+    <div class="test-question">"What would I tell my closest friend to do?"</div>
+    <p>Strips away the emotional and ego components that are biasing you, instantly. You suddenly see the situation with the clarity reserved for other people's lives.</p>
+    <div class="test-howto">If your advice to them is different from your advice to yourself, the difference is the bias.</div>
+  </div>
+
+  <div class="test-card">
+    <div class="test-num">Test · 02</div>
+    <div class="test-title">The Pre-Mortem</div>
+    <div class="test-question">"It's a year from now and this failed. Why?"</div>
+    <p>Gary Klein's technique. By assuming failure as a fact, you unlock candid critique that hindsight bias normally suppresses. Generates a richer list of risks than "what could go wrong?"</p>
+    <div class="test-howto">Spend 5 minutes listing failure causes <em>as if they already happened</em>. The top 2 become things you actively design around.</div>
+  </div>
+
+  <div class="test-card">
+    <div class="test-num">Test · 03</div>
+    <div class="test-title">The EV Bet Test</div>
+    <div class="test-question">"Would I take this as a 100×-repeated bet?"</div>
+    <p>Translates the decision into a wager. Forces you to put numbers on probability and payoff. Reveals whether you actually believe what you're saying or just feel optimistic.</p>
+    <div class="test-howto">If you wouldn't repeat it 100 times in identical situations, you're not actually confident — you're hoping.</div>
+  </div>
+
+  <div class="test-card">
+    <div class="test-num">Test · 04</div>
+    <div class="test-title">The NASA Checklist</div>
+    <div class="test-question">"What am I assuming that might not be true?"</div>
+    <p>Write down the three to five load-bearing assumptions behind your plan. List them explicitly. Most failures trace to one assumption that everyone in the room treated as given.</p>
+    <div class="test-howto">Then ask of each: "If this turns out false, what's my plan?" Now you've stress-tested.</div>
+  </div>
+
+  <div class="test-card">
+    <div class="test-num">Test · 05</div>
+    <div class="test-title">Inversion</div>
+    <div class="test-question">"What would guarantee failure?"</div>
+    <p>Munger's tool. The forward question ("how do I succeed?") is impossibly broad. The inverted one yields a tractable list — and you just have to not do those things.</p>
+    <div class="test-howto">Write the failure list. Then check: am I currently doing any of these? You'd be surprised how often the answer is yes.</div>
+  </div>
+
+  <div class="test-card">
+    <div class="test-num">Test · 06</div>
+    <div class="test-title">The One-Way Door Test</div>
+    <div class="test-question">"Can I reverse this in 3 months?"</div>
+    <p>Match the effort to the stakes. If yes, decide in 70% of the time you think you need. If no, the decision deserves your most careful thinking — and probably a pre-mortem.</p>
+    <div class="test-howto">If you can't decide whether it's one-way or two-way, that ambiguity is itself information — treat as one-way to be safe.</div>
+  </div>
+</div>
+
+<h3 id="p4-journal"><span class="h3-num">04.2</span>The decision journal</h3>
+
+<p>The single highest-leverage habit in this whole manual. Before any consequential decision, write down: the decision, the situation, your alternatives, the relevant information, your reasoning, your prediction with confidence levels. Then revisit when you know the outcome.</p>
+
+<p>This compounds in three ways. It <strong>improves your decisions in the moment</strong> &mdash; the act of writing forces structured thinking and exposes weak reasoning. It <strong>protects against hindsight bias</strong> &mdash; you can actually see what you believed at the time, not what your brain rewrote later. It <strong>builds calibration</strong> &mdash; over months and years, you learn whether your 70%-confidents are actually 70%.</p>
+
+<div class="template">
+  <h5>Decision journal entry</h5>
+  <div class="template-sub">Print, photocopy, fill before any high-stakes decision</div>
+
+  <div class="template-field">
+    <div class="field-label">Date &amp; decision</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">Situation · what's actually happening</div>
+    <div class="field-line">_______________________________________________________</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">Alternatives considered (including "do nothing")</div>
+    <div class="field-line">_______________________________________________________</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+
+  <div class="template-row">
+    <div class="template-field">
+      <div class="field-label">Probability of success</div>
+      <div class="field-line">______ %</div>
+    </div>
+    <div class="template-field">
+      <div class="field-label">Confidence in that estimate</div>
+      <div class="field-line">low / medium / high</div>
+    </div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">Reasoning &amp; load-bearing assumptions</div>
+    <div class="field-line">_______________________________________________________</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">What I'd need to see to change my mind</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">Review date</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+</div>
+
+<h3 id="p4-premortem"><span class="h3-num">04.3</span>The pre-mortem worksheet</h3>
+
+<p>For irreversible or high-stakes decisions, run a pre-mortem before committing. Spend 15 focused minutes; this single exercise has saved more careers and companies than any other tool in this manual.</p>
+
+<div class="template">
+  <h5>Pre-mortem worksheet</h5>
+  <div class="template-sub">Imagine it's 12 months from now. The decision failed. Write the obituary.</div>
+
+  <div class="template-field">
+    <div class="field-label">The decision under consideration</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">It failed. Why? (list 5 specific causes, as if reporting facts)</div>
+    <div class="field-line">1. ____________________________________________________</div>
+    <div class="field-line">2. ____________________________________________________</div>
+    <div class="field-line">3. ____________________________________________________</div>
+    <div class="field-line">4. ____________________________________________________</div>
+    <div class="field-line">5. ____________________________________________________</div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">Which two are most plausible right now?</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">For each, what would prevent it (or detect it early)?</div>
+    <div class="field-line">_______________________________________________________</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+
+  <div class="template-field">
+    <div class="field-label">Given this exercise, do I still proceed? If yes, what changes?</div>
+    <div class="field-line">_______________________________________________________</div>
+  </div>
+</div>
+
+<h3 id="p4-examples"><span class="h3-num">04.4</span>Six worked examples</h3>
+
+<p>Tools are easier to internalize when you see them applied. Here are six decisions, each stress-tested against the right subset of frameworks from this manual.</p>
+
+<div class="example-card">
+  <div class="card-eyebrow">Career · pivot</div>
+  <div class="card-title">Should I take this job offer?</div>
+  <div class="example-step"><div class="step-label">Door</div><div class="step-text">Is this a one-way or two-way door? Most jobs are two-way. If you hate it in 6 months, you can leave. Decide faster than you think.</div></div>
+  <div class="example-step"><div class="step-label">Outside</div><div class="step-text">What's the reference class? How long do people typically stay in this role at this company? What's the typical career trajectory after?</div></div>
+  <div class="example-step"><div class="step-label">EV</div><div class="step-text">Compensation × probability of working out + non-financial upside (skills, network, optionality) − the cost of <em>not</em> taking your next-best option for that year.</div></div>
+  <div class="example-step"><div class="step-label">10/10/10</div><div class="step-text">How will I feel in 10 weeks? 10 months? 10 years? Most "yes" decisions look obvious at the 10-month frame.</div></div>
+  <div class="example-step"><div class="step-label">Pre-mortem</div><div class="step-text">It's a year from now and I hate this job. Why? The two most plausible causes go on a watch-list before you start.</div></div>
+</div>
+
+<div class="example-card">
+  <div class="card-eyebrow">Financial · evaluate</div>
+  <div class="card-title">Should I invest in this?</div>
+  <div class="example-step"><div class="step-label">Circle</div><div class="step-text">Is this inside my circle of competence? If I can't explain in 2 sentences why this is mispriced, I'm betting on a story.</div></div>
+  <div class="example-step"><div class="step-label">Margin</div><div class="step-text">Have I built in a margin of safety? Could this lose 50% and would I still be okay?</div></div>
+  <div class="example-step"><div class="step-label">Ruin</div><div class="step-text">If this goes to zero, does the rest of my life still work? If no, this position is too large regardless of EV.</div></div>
+  <div class="example-step"><div class="step-label">Kelly</div><div class="step-text">Given my honest edge estimate (probably smaller than I think), what does half-Kelly suggest? That's the upper bound on position size.</div></div>
+  <div class="example-step"><div class="step-label">Mr. Market</div><div class="step-text">Am I deciding from value, or am I being moved by recent price action? If the latter, wait.</div></div>
+</div>
+
+<div class="example-card">
+  <div class="card-eyebrow">Personal · relationship</div>
+  <div class="card-title">Am I staying because I want to, or because I've invested too much?</div>
+  <div class="example-step"><div class="step-label">Sunk</div><div class="step-text">If I were starting from scratch today, would I choose this? The years invested are gone either way — they don't count.</div></div>
+  <div class="example-step"><div class="step-label">Outsider</div><div class="step-text">What would I tell my closest friend in this situation? Why am I telling myself something different?</div></div>
+  <div class="example-step"><div class="step-label">Kill</div><div class="step-text">Did I ever set kill criteria for this? If I had, would they be triggered now? If yes, I'm in sunk-cost territory.</div></div>
+  <div class="example-step"><div class="step-label">Regret</div><div class="step-text">At 80, would I regret staying or regret leaving more? Honest answer, not the socially acceptable one.</div></div>
+  <div class="example-step"><div class="step-label">10y</div><div class="step-text">10 weeks of awful conversation now vs. 10 more years of low-grade unhappiness. Run the math.</div></div>
+</div>
+
+<div class="example-card">
+  <div class="card-eyebrow">Everyday · communication</div>
+  <div class="card-title">How do I respond to this tricky email?</div>
+  <div class="example-step"><div class="step-label">Door</div><div class="step-text">Two-way door. Almost always. So: respond once, calmly, and stop overthinking.</div></div>
+  <div class="example-step"><div class="step-label">Emo</div><div class="step-text">Am I emotionally activated right now? If yes: 24-hour rule. Write the response, save as draft, don't send.</div></div>
+  <div class="example-step"><div class="step-label">Steel</div><div class="step-text">What's the strongest version of what they're saying? Respond to that version, not to the version that's easier to refute.</div></div>
+  <div class="example-step"><div class="step-label">10/10/10</div><div class="step-text">10 minutes from now I'll want to send the sharp one. 10 months from now I'll wish I sent the calm one. Send the calm one.</div></div>
+</div>
+
+<div class="example-card">
+  <div class="card-eyebrow">Career · negotiate</div>
+  <div class="card-title">Negotiating a salary offer</div>
+  <div class="example-step"><div class="step-label">Outside</div><div class="step-text">Reference class: what do people with your title, level, and location actually get? Levels.fyi, Glassdoor, friends in the field. Build the outside view <em>before</em> the conversation.</div></div>
+  <div class="example-step"><div class="step-label">Anchor</div><div class="step-text">First number anchors hard. If they ask your expectations, give a researched range, top-heavy. Don't accept their first number as the anchor.</div></div>
+  <div class="example-step"><div class="step-label">Loss</div><div class="step-text">They are loss-averse too — the loss of <em>you</em> after they've decided to hire is real to them. Use this. Your alternative is your leverage; don't bluff one you don't have.</div></div>
+  <div class="example-step"><div class="step-label">EV</div><div class="step-text">Worst case from asking for more: small chance they rescind (rare in practice). Upside: years of compounded higher base. The math overwhelmingly favors asking.</div></div>
+  <div class="example-step"><div class="step-label">Door</div><div class="step-text">Asking is a two-way door. Take a day. Email rather than panic on the phone. Most negotiation regret is about not asking, not about how you asked.</div></div>
+</div>
+
+<div class="example-card">
+  <div class="card-eyebrow">Capital · investing</div>
+  <div class="card-title">Should I sell this position?</div>
+  <div class="example-step"><div class="step-label">Circle</div><div class="step-text">Am I inside my circle of competence on this asset? If I can't articulate in two sentences why it should be worth more in three years than today, I don't have a real view. I'm just hoping.</div></div>
+  <div class="example-step"><div class="step-label">Mkt</div><div class="step-text">Is price action driving me, or is my view of value driving me? Wanting to sell because the chart looks scary is letting Mr. Market dictate the decision. Wait until I have a value-based reason.</div></div>
+  <div class="example-step"><div class="step-label">Sunk</div><div class="step-text">Does my cost basis matter to whether I sell? It shouldn't. The only forward-looking question is: at today's price, would I buy this asset fresh? If no, that is the information.</div></div>
+  <div class="example-step"><div class="step-label">Punch</div><div class="step-text">If I only had twenty lifetime trades, would this be a punch I'd want to spend? Most "should I sell" agonizing dissolves under this question.</div></div>
+  <div class="example-step"><div class="step-label">Ruin</div><div class="step-text">If this position became zero tomorrow, does the rest of my life still work? If yes, I can stay patient. If no, the question isn't whether to sell — it's that I was over-concentrated in the first place.</div></div>
+</div>
+
+<h3 id="p4-llm"><span class="h3-num">04.5</span>Using a language model as a thinking partner</h3>
+
+<p>A language model &mdash; Claude, ChatGPT, Gemini &mdash; is not a source of truth. But it is a remarkably good <em>thinking partner</em> for the techniques in this manual. Used well, it compresses days of structured thinking into an afternoon. Used badly, it amplifies your existing biases by telling you confidently what you wanted to hear.</p>
+
+<p>The trick is to set it up as an <em>adversarial</em> collaborator, not a sycophantic one. The default mode of these models is to help; you have to explicitly tell them to push back. Four prompt patterns that consistently produce better thinking:</p>
+
+<div class="callout example">
+<div class="callout-title">Prompt · The steel-man</div>
+<p><em>"I'm leaning toward [decision] because [reasons]. Steel-man the opposite view as if you genuinely held it. Don't soften it. The best version of 'don't do this.' Then identify which of my reasons would collapse first under that argument."</em></p>
+</div>
+
+<div class="callout example">
+<div class="callout-title">Prompt · The pre-mortem</div>
+<p><em>"It's twelve months from now. This decision failed badly. Write the post-mortem &mdash; what went wrong, in what order, and which warning signs I likely ignored. Be specific and uncharitable. Don't hedge."</em></p>
+</div>
+
+<div class="callout example">
+<div class="callout-title">Prompt · The calibration check</div>
+<p><em>"Here are my probability estimates for [outcomes]: [list]. Identify where these probabilities seem internally inconsistent, where I'm likely overconfident, and what reference classes I should be checking against."</em></p>
+</div>
+
+<div class="callout example">
+<div class="callout-title">Prompt · The reference class</div>
+<p><em>"For [my situation], what's the reference class of similar situations historically? What's the base rate of success? What predicts which cases ended up in the success tail, separately from the founder/operator's self-narrative?"</em></p>
+</div>
+
+<div class="callout warning">
+<div class="callout-title">The trap to watch for</div>
+<p>Language models are trained, in part, to please. If you describe a plan with conviction, the model will help you execute it &mdash; even when the right move is to challenge the plan itself. Counteract this by <em>asking for the disagreement first</em>, before asking for the help. Set the model's role explicitly: "Act as a skeptical investor evaluating this pitch." Roles work.</p>
+</div>
+
+<div class="callout try">
+<div class="callout-title">Try this today</div>
+<p>Take one decision you're currently weighing. Open Claude or ChatGPT. Paste the steel-man prompt above with your actual situation. Read the answer carefully. Notice which of your reasons feel shakiest after &mdash; those are the ones that need more work, not less.</p>
+</div>
+
+<div class="divider"><span class="divider-text">End · Module 04</span></div>
+
+
+<!-- ============================================================
+     MODULE 05 — THE DEEPER GAME
+     ============================================================ -->
+<section class="module" id="mod5">
+  <div class="module-num-wrap">
+    <div class="module-label">Module · Five</div>
+    <div class="module-num">05</div>
+  </div>
+  <div class="module-body">
+    <h2>The deeper <span class="accent">game</span>.</h2>
+    <p class="module-intro">Your decisions happen inside systems where other agents adapt. Here's the level above individual choice.</p>
+    <div class="promise">By the end of this module</div>
+    <p>You'll see why most apparent "individual choices" are determined by the game being played around them, why optimization sometimes destroys the thing being optimized, and how to build a life that gains from disorder rather than being broken by it.</p>
+  </div>
+</section>
+
+<h3 id="p5-incentives"><span class="h3-num">05.1</span>Incentives explain almost everything</h3>
+
+<p>Charlie Munger again: <em>"Show me the incentive, and I'll show you the outcome."</em> Most apparent stupidity, malice, or irrationality dissolves once you map the incentives the actors are actually facing. People rarely act against their incentives for long.</p>
+
+<p>This isn't cynicism &mdash; it's a diagnostic. If you find yourself thinking "why on earth would they do that?", you're looking at a system whose incentives you haven't mapped yet. Map them and the behavior usually becomes obvious.</p>
+
+<div class="row">
+<p><strong>Goodhart's Law:</strong> <em>"When a measure becomes a target, it ceases to be a good measure."</em> The moment people know they're being judged on a metric, they optimize for the metric rather than the thing the metric was supposed to track. Standardized testing produced test-prep instead of education. Citation counts produced citation gaming. Engagement metrics produced rage-bait. <span class="mark">Every measurement system corrodes itself over time.</span></p>
+<aside class="sidenote"><span class="sn-label">Defense</span>When designing systems: never tie significant rewards to a single metric. Always measure 2-3 things that pull in different directions. The optimization toward one creates pressure on the others, exposing the gaming.</aside>
+</div>
+
+<p><strong>Skin in the game.</strong> Taleb's principle: people who bear no consequences from their advice should not be taken seriously. The forecaster who never gets penalized for being wrong, the consultant who's gone before the strategy plays out, the executive with a golden parachute &mdash; their incentives are pure asymmetry. Adjust your trust accordingly. Conversely, when evaluating your own advice to others, ask: <em>"Am I bearing any cost if I'm wrong?"</em> If not, your confidence should be lower than it feels.</p>
+
+<h3 id="p5-game"><span class="h3-num">05.2</span>Basic game theory</h3>
+
+<p>You are rarely deciding in isolation. Most of your decisions are <em>moves</em> in a game where other agents are also choosing, often in response to you. A handful of game-theory concepts will sharpen this.</p>
+
+<p><strong>Nash equilibrium:</strong> a state where no player can improve their outcome by unilaterally changing strategy. Most stable real-world situations sit at Nash equilibria &mdash; including bad ones. Traffic jams, arms races, status competitions. <em>Nobody benefits from defecting alone</em>, even when everyone would benefit if everyone changed at once. This is why coordination problems are so hard: rational individual action produces irrational collective outcomes.</p>
+
+<p><strong>Tragedy of the commons.</strong> Individually rational extraction of a shared resource leads to its collective destruction. Overfishing, antibiotic resistance, climate change, attention markets. Solutions exist (property rights, regulation, social norms, Elinor Ostrom's work on community management) but they require coordination &mdash; which is exactly what the tragedy makes hard.</p>
+
+<p><strong>Repeated games change everything.</strong> A single-shot interaction often rewards defection: take the favor, don't reciprocate, walk away. A repeated interaction does not. The shadow of future encounters makes cooperation the dominant strategy. Tit-for-tat &mdash; cooperate first, then copy whatever they did last &mdash; wins iterated prisoner's dilemma tournaments. <span class="mark">If you're playing one-shot games when you could be playing repeated ones, you're leaving enormous value on the table.</span></p>
+
+<p><strong>The Red Queen effect.</strong> In any competitive arena, running stands still while others run too. If your competition is improving 5% per year and you're improving 5% per year, your relative position is unchanged. To <em>advance</em>, you need to outpace the field &mdash; not just improve in absolute terms. Most fields run faster than you think.</p>
+
+<h3 id="p5-moloch"><span class="h3-num">05.3</span>Moloch &mdash; coordination failure at scale</h3>
+
+<p>Scott Alexander's essay <em>Meditations on Moloch</em> describes the most important pattern in modern civilization: <strong>multipolar traps</strong> where each player, acting rationally on their own incentives, contributes to an outcome no one would have chosen. There's no villain. There's just the structure of the game.</p>
+
+<p>Social media optimizes for engagement, which optimizes for outrage, which makes everyone more miserable but no individual platform can stop because users will go to whichever competitor doesn't. Academic publishing optimizes for citation counts, which optimizes for incremental papers, which makes the science less useful but no individual researcher can fix it. Companies optimize for quarterly earnings because their investors will leave for ones that do.</p>
+
+<div class="row">
+<p>Recognizing Moloch is half the battle. The other half: opting out where you can, contributing to coordination mechanisms that escape the trap (regulation, professional norms, treaties), and at minimum, not adding fuel. <em>You will not solve a Moloch problem with individual virtue.</em> The structure has to change.</p>
+<aside class="sidenote"><span class="sn-label">Personal version</span>If you've ever felt forced into a competition you didn't want to be in &mdash; for jobs, for housing, for status &mdash; that's Moloch. The exit is usually sideways, not forward.</aside>
+</div>
+
+<div class="pullquote">
+<p>The danger is not that AI develops its own desires. The danger is that we will use AI to compete against each other so effectively that we'll end up in a Moloch world we never chose.</p>
+<cite>Scott Alexander · paraphrased</cite>
+</div>
+
+<h3 id="p5-complex"><span class="h3-num">05.4</span>Complex systems &amp; emergent behavior</h3>
+
+<p>Most consequential decisions happen in <strong>complex systems</strong> &mdash; markets, ecosystems, social networks, large organizations &mdash; where the whole behaves in ways the parts don't.</p>
+
+<p><strong>Nonlinearity.</strong> Effects are not proportional to causes. Push the lever twice as hard and you might get four times the response, or no response, or a catastrophic phase change. The same intervention works at one scale and fails at another. Linear thinking misleads here constantly.</p>
+
+<p><strong>Power laws.</strong> A few things matter enormously; most things barely matter at all. 20% of customers drive 80% of revenue. The top 1% of content gets 99% of attention. The top 0.1% of code commits cause most outages. Strategic clarity comes from finding the vital few and ignoring the trivial many.</p>
+
+<p><strong>Optimization vs. redundancy.</strong> Efficient systems are fragile. Redundant systems are robust. Just-in-time supply chains were beautifully optimized until 2020. The pandemic and shipping disruptions revealed how much fragility had been silently accumulating in the name of efficiency. <span class="mark">Slack and redundancy are not waste; they are insurance.</span></p>
+
+<h3 id="p5-evolution"><span class="h3-num">05.5</span>Evolution &amp; cultural learning</h3>
+
+<p>Evolution is not just about biology. Any system with variation, selection, and inheritance evolves: ideas, companies, technologies, cultures. Joseph Henrich's <em>The Secret of Our Success</em> argues that humans dominated the planet not through individual intelligence but through <strong>cumulative cultural evolution</strong> &mdash; the accumulated practical knowledge encoded in our traditions, techniques, and institutions.</p>
+
+<p>The implication for decisions: <strong>tradition encodes information you don't have</strong>. When a culture has been doing something a particular way for 500 years, that's not necessarily backwardness &mdash; it's often accumulated wisdom about what works in this particular context, even when no individual can articulate why. <em>Chesterton's Fence:</em> before tearing down a fence whose purpose is unclear, you should at least understand why it was put up.</p>
+
+<div class="row">
+<p>This cuts both ways. Some traditions are just stale conventions that survived past their useful date. The skill is distinguishing load-bearing customs from decorative ones &mdash; usually by asking: <em>"If I remove this, what mechanism predicts the failure mode?"</em> If you can't answer, the tradition probably encodes a lesson you haven't recovered yet.</p>
+<aside class="sidenote"><span class="sn-label">Lindy</span>Taleb's "Lindy effect": the longer a non-perishable thing has survived, the longer it can be expected to survive. Books, ideas, institutions in the Lindy zone get the benefit of the doubt.</aside>
+</div>
+
+<h3 id="p5-antifragile"><span class="h3-num">05.6</span>Antifragility &mdash; building to gain from disorder</h3>
+
+<p>Taleb's most useful contribution. He distinguishes three responses to volatility:</p>
+
+<ul>
+  <li><strong>Fragile</strong> things <em>break</em> under stress. A wine glass. A leveraged trade. A career built on one employer.</li>
+  <li><strong>Resilient</strong> things <em>survive</em> stress unchanged. A diamond. A stable currency. A diversified income.</li>
+  <li><strong>Antifragile</strong> things <em>improve</em> under stress. Muscles. Immune systems. Evolution. Skill under pressure.</li>
+</ul>
+
+<p>Most things are fragile or resilient. Antifragility is rare and incredibly valuable. The lesson for design: build systems &mdash; and lives &mdash; that <em>gain</em> from disorder rather than merely surviving it.</p>
+
+<p><strong>Via negativa.</strong> The reliable path to antifragility is subtractive, not additive. We know what makes things fragile (debt, single points of failure, concentrated dependencies, lying to yourself). Removing fragility is more reliable than adding strength. <em>Don't try to predict the storm. Build the boat that doesn't sink.</em></p>
+
+<p><strong>The barbell, revisited.</strong> Combine very safe positions with very speculative ones &mdash; avoid the middle. 85% in extreme safety, 15% in high-variance bets. This shape is antifragile: the safe side absorbs shocks while the speculative side captures upside. A career equivalent: stable day job + ambitious side projects, not a "promising" mid-tier role with neither security nor breakout potential.</p>
+
+<p><strong>Convexity.</strong> Prefer situations with bounded downside and unbounded upside. Most of life's biggest wins come from <em>convex</em> bets &mdash; small experiments where the worst case is "wasted a weekend" and the best case is "changed my career." The reverse is concave: bounded upside, unbounded downside (one more drink at the party, one more leveraged trade, one more late-night email). Sort your habits by which curve they're on. Eliminate the concave ones first.</p>
+
+<h3 id="p5-meta"><span class="h3-num">05.7</span>Meta-patterns &mdash; the six that tie it all together</h3>
+
+<p>The same shape shows up across every module of this manual. Once you see it, you see it everywhere.</p>
+
+<div class="meta-grid">
+  <div class="meta-card">
+    <div class="meta-num">PATTERN · 01</div>
+    <div class="meta-name">Asymmetry beats accuracy</div>
+    <p>You don't need to be right often. You need your rights to pay more than your wrongs cost. Hunt for convex setups. Skip symmetric ones.</p>
+  </div>
+  <div class="meta-card">
+    <div class="meta-num">PATTERN · 02</div>
+    <div class="meta-name">Survive first, optimize second</div>
+    <p>No EV calculation overrides ruin. Make sure the worst case keeps you in the game; then play to win. Buffett's rule one is the master pattern.</p>
+  </div>
+  <div class="meta-card">
+    <div class="meta-num">PATTERN · 03</div>
+    <div class="meta-name">Outside view first</div>
+    <p>Before your specific situation, check the reference class. The base rate is doing most of the work. Your case is less special than it feels.</p>
+  </div>
+  <div class="meta-card">
+    <div class="meta-num">PATTERN · 04</div>
+    <div class="meta-name">Decisions, not outcomes</div>
+    <p>Judge yourself by the quality of your process, not the result. Good decisions sometimes fail and bad decisions sometimes succeed. Don't learn the wrong lesson from either.</p>
+  </div>
+  <div class="meta-card">
+    <div class="meta-num">PATTERN · 05</div>
+    <div class="meta-name">Incentives over intentions</div>
+    <p>Map the incentives, predict the behavior. Trust people's structural position more than their stated motives. This applies to you too.</p>
+  </div>
+  <div class="meta-card">
+    <div class="meta-num">PATTERN · 06</div>
+    <div class="meta-name">Compound, don't interrupt</div>
+    <p>The biggest gains come from not stopping. Money, skill, reputation, health — all compound. Most life regrets are about interruptions, not slow starts.</p>
+  </div>
+</div>
+
+<div class="pullquote">
+<p>The work is not building a perfect system. The work is making fewer of the same five mistakes — for decades, on purpose, in writing.</p>
+<cite>Ben · Working Manual</cite>
+</div>
+
+<div class="callout try">
+<div class="callout-title">Try this today</div>
+<p>Identify one Moloch trap you're currently inside &mdash; a competition you didn't choose, an optimization you can't escape, a metric that's eating the thing it was supposed to measure. Then ask the only real question: <em>what's the sideways exit?</em> Not "how do I win this game," but "how do I stop playing it."</p>
+</div>
+
+<div class="divider"><span class="divider-text">End · Module 05</span></div>
+
+
+<!-- ============================================================
+     GLOSSARY
+     ============================================================ -->
+<section id="glossary" style="margin-top: 5rem;">
+  <div class="section-eyebrow">Reference · A</div>
+  <h2>Glossary.</h2>
+  <p style="color: var(--ink-2); font-size: 1.05rem; margin-bottom: 2rem; max-width: var(--measure);">The 28 concepts in this manual, defined for fast recall. Skim before any consequential decision.</p>
+
+  <div class="glossary glossary-grid">
+    <div class="glossary-entry">
+      <div class="glossary-term">Anchoring</div>
+      <div class="glossary-def">The first number you see biases all subsequent estimates &mdash; even when irrelevant. Generate your own estimate before seeing anyone else's.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Antifragile</div>
+      <div class="glossary-def">A system that gains from disorder. Beyond robust (which survives unchanged) and fragile (which breaks). Build for antifragility through redundancy and convex exposures.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Base rate</div>
+      <div class="glossary-def">How often something happens in the relevant reference class, ignoring specifics. The number most people forget to multiply by. Almost always the dominant term.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Bayesian update</div>
+      <div class="glossary-def">Adjusting belief = prior odds × likelihood ratio. The mechanical procedure for combining evidence with prior probability. The whole foundation of clear thinking under uncertainty.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Brier score</div>
+      <div class="glossary-def">Mean squared error of probabilistic predictions vs. outcomes. Standard calibration metric. Lower is better; superforecasters land around 0.15.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Circle of competence</div>
+      <div class="glossary-def">Buffett: the set of subjects where you can genuinely outperform an average smart person. Size matters less than knowing where the boundary is. Most catastrophic decisions happen just outside it.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Ergodicity</div>
+      <div class="glossary-def">A property of systems where the average across many people equals the average over time for one person. When it fails &mdash; which is whenever ruin is possible &mdash; group EV stops applying to individuals.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Expected value (EV)</div>
+      <div class="glossary-def">Σ (probability × payoff) across all outcomes. The mathematically correct way to evaluate a bet &mdash; if you can survive the losses along the way.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Fat-tailed</div>
+      <div class="glossary-def">A distribution where extreme events drive most outcomes. Most causally-linked systems (wealth, fame, pandemics, hits) are fat-tailed. Bell-curve intuitions catastrophically fail here.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Goodhart's Law</div>
+      <div class="glossary-def">When a measure becomes a target, it stops being a good measure. Every metric corrodes itself once people optimize for it.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Ideological Turing Test</div>
+      <div class="glossary-def">Caplan's test: can you state an opposing view so well that sincere proponents would mistake you for one of them? If not, you don't understand it well enough to disagree productively.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Inversion</div>
+      <div class="glossary-def">Munger's tool. Instead of "how do I succeed?", ask "what would guarantee failure?" and avoid those things. Inverted questions are almost always more tractable.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Kelly criterion</div>
+      <div class="glossary-def">Mathematically optimal bet size: (p × b − q) / b. In practice, use half-Kelly to account for estimation error in p. Full Kelly is more aggressive than your real edge supports.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Kill criteria</div>
+      <div class="glossary-def">Duke's fix for the sunk cost fallacy. Decide quitting conditions while still cold and clear; let them do the work when you'd otherwise be emotionally compromised.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Lollapalooza</div>
+      <div class="glossary-def">Munger's term for several biases pushing the same direction simultaneously. The combined force is explosive &mdash; bubbles, panics, and cults are usually lollapaloozas.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Margin of safety</div>
+      <div class="glossary-def">Graham's principle: don't aim for the boundary of what works &mdash; leave room for error. Build the bridge for 30,000 pounds and drive 10,000-pound trucks across it.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Moloch</div>
+      <div class="glossary-def">Multipolar trap. A configuration where each actor is forced by competition to sacrifice something they value. No villain, just incentives. Exit is usually sideways.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Mr. Market</div>
+      <div class="glossary-def">Graham's parable: imagine the market as a moody partner who shows up daily with a price. Trade with him only when his quotes suit you; otherwise ignore him.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Optionality</div>
+      <div class="glossary-def">Choices that keep future doors open. Nonlinear upside with capped downside. The barbell is the canonical structure: ultra-safe + highly speculative, nothing in the middle.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Outside view</div>
+      <div class="glossary-def">Estimating using a reference class of similar situations rather than your specific case. Far harder to defeat than the inside view. Almost always weighted too lightly.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Pre-mortem</div>
+      <div class="glossary-def">Klein's tool. Imagine the decision has failed twelve months from now; write the obituary. Generates a richer failure list than "what could go wrong?" because hindsight bias gets reversed.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Regression to the mean</div>
+      <div class="glossary-def">Extreme outcomes are partly luck; the luck doesn't repeat. Expect performances to drift back to the average. Don't credit your last intervention.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Resulting</div>
+      <div class="glossary-def">Duke's term for judging a decision by its outcome rather than by its quality given the information available. The single most common decision-evaluation error.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Satisficer</div>
+      <div class="glossary-def">Simon's term: someone who picks the first option clearing a threshold. Counterintuitively outperforms maximizers in happiness and often in outcome.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Second-order effects</div>
+      <div class="glossary-def">What happens because of what happens. Most competitive advantage comes from consistently thinking one or two orders ahead. Most people don't.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Skin in the game</div>
+      <div class="glossary-def">Taleb: people who bear consequences from their advice should be trusted more than those who don't. Asymmetric exposure produces asymmetric truthfulness.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Status quo bias</div>
+      <div class="glossary-def">Treating "do nothing" as a non-decision. It isn't. Inaction is an active choice with its own expected value.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Steelmanning</div>
+      <div class="glossary-def">Actively constructing the strongest version of a view you disagree with. The bar: a smart proponent would recognize your version as their best case.</div>
+    </div>
+    <div class="glossary-entry">
+      <div class="glossary-term">Sunk cost fallacy</div>
+      <div class="glossary-def">Letting past investment influence forward-looking decisions. The only relevant question is: starting from scratch today, would I commit this? Past spend is gone either way.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     READING LIST
+     ============================================================ -->
+<section id="reading" style="margin-top: 5rem;">
+  <div class="section-eyebrow">Reference · B</div>
+  <h2>Further reading.</h2>
+  <p style="color: var(--ink-2); font-size: 1.05rem; margin-bottom: 2rem; max-width: var(--measure);">Twelve books. If you read three of these in the next year, every chapter of this manual will deepen.</p>
+
+  <div class="reading-list">
+    <div class="book">
+      <div class="book-mark">01</div>
+      <div>
+        <div class="book-title">Thinking, Fast and Slow</div>
+        <div class="book-author">Daniel Kahneman</div>
+        <div class="book-desc">The foundational text. The two-systems framing, the catalog of biases, and the intellectual humility that comes from a Nobel laureate revising his own work decades later.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">02</div>
+      <div>
+        <div class="book-title">Superforecasting</div>
+        <div class="book-author">Philip E. Tetlock &amp; Dan Gardner</div>
+        <div class="book-desc">Twenty years of forecasting tournament data, distilled. The closest thing we have to a workout plan for the skill of being right about the future.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">03</div>
+      <div>
+        <div class="book-title">Thinking in Bets</div>
+        <div class="book-author">Annie Duke</div>
+        <div class="book-desc">A former professional poker player on the discipline of separating decision quality from outcome quality. The clearest book on resulting ever written.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">04</div>
+      <div>
+        <div class="book-title">Quit</div>
+        <div class="book-author">Annie Duke</div>
+        <div class="book-desc">The companion volume on knowing when to stop. The kill-criteria framework lives here. Reads short, hits hard.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">05</div>
+      <div>
+        <div class="book-title">The Scout Mindset</div>
+        <div class="book-author">Julia Galef</div>
+        <div class="book-desc">On the difference between defending positions and actually trying to be right. Galef is one of the clearest writers on epistemics working today.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">06</div>
+      <div>
+        <div class="book-title">Antifragile</div>
+        <div class="book-author">Nassim Nicholas Taleb</div>
+        <div class="book-desc">Idiosyncratic, occasionally infuriating, often profound. The framing of fragile / robust / antifragile alone is worth the price of the book.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">07</div>
+      <div>
+        <div class="book-title">Poor Charlie's Almanack</div>
+        <div class="book-author">Charles T. Munger</div>
+        <div class="book-desc">A lifetime of decision wisdom from Buffett's partner. Worth owning physically and rereading sections every few years. The mental-models chapter alone is foundational.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">08</div>
+      <div>
+        <div class="book-title">Decisive</div>
+        <div class="book-author">Chip Heath &amp; Dan Heath</div>
+        <div class="book-desc">The most practical of the popular decision books. The WRAP framework (widen options, reality-test, attain distance, prepare to be wrong) is genuinely useful.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">09</div>
+      <div>
+        <div class="book-title">The Signal and the Noise</div>
+        <div class="book-author">Nate Silver</div>
+        <div class="book-desc">Silver applies forecasting and Bayesian thinking to elections, weather, baseball, poker, and pandemics. The case studies are what stick.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">10</div>
+      <div>
+        <div class="book-title">How Big Things Get Done</div>
+        <div class="book-author">Bent Flyvbjerg &amp; Dan Gardner</div>
+        <div class="book-desc">The empirical case for the outside view. Flyvbjerg has the largest database of megaproject outcomes in existence and it's brutal reading for anyone who plans things.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">11</div>
+      <div>
+        <div class="book-title">The Secret of Our Success</div>
+        <div class="book-author">Joseph Henrich</div>
+        <div class="book-desc">Anthropology that quietly rewires how you think about tradition, culture, and what "rational individual" even means. Pairs unusually well with the antifragility material.</div>
+      </div>
+    </div>
+    <div class="book">
+      <div class="book-mark">12</div>
+      <div>
+        <div class="book-title">The Precipice</div>
+        <div class="book-author">Toby Ord</div>
+        <div class="book-desc">Decision theory applied to existential risk. The clearest treatment of how to think about very large stakes under deep uncertainty &mdash; the limit case of everything in this manual.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     COLOPHON
+     ============================================================ -->
+
+
+</article>
+</main>
+
+
+<script>
+(function() {
+  'use strict';
+
+  // ========================================
+  // PROGRESS BAR
+  // ========================================
+  const progressBar = document.getElementById('progressBar');
+  function updateProgress() {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    progressBar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // ========================================
+  // MOBILE NAV TOGGLE
+  // ========================================
+  const sidebar = document.getElementById('sidebar');
+  const navToggle = document.getElementById('mobileNavToggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+    sidebar.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => sidebar.classList.remove('open'));
+    });
+  }
+
+  // ========================================
+  // SIDEBAR ACTIVE-LINK TRACKING
+  // ========================================
+  const navLinks = Array.from(sidebar.querySelectorAll('a[href^="#"]'));
+  const sections = navLinks.map(a => {
+    const id = a.getAttribute('href').slice(1);
+    return { link: a, el: document.getElementById(id) };
+  }).filter(s => s.el);
+
+  function updateActive() {
+    const y = window.scrollY + 120;
+    let active = sections[0];
+    for (const s of sections) {
+      if (s.el.offsetTop <= y) active = s;
+    }
+    navLinks.forEach(a => a.classList.remove('active'));
+    if (active) active.link.classList.add('active');
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  // ========================================
+  // ANCHORING WIDGET
+  // ========================================
+  const anchorBtns = document.querySelectorAll('.anchor-btn');
+  let chosenAnchor = null;
+  anchorBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      anchorBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      chosenAnchor = parseFloat(btn.dataset.anchor);
+    });
+  });
+
+  const anchorReveal = document.getElementById('anchorReveal');
+  const anchorOut = document.getElementById('anchorOut');
+  const anchorMsg = document.getElementById('anchorMsg');
+  const anchorGuess = document.getElementById('anchorGuess');
+
+  if (anchorReveal) {
+    anchorReveal.addEventListener('click', () => {
+      const actual = 3.4;
+      const guess = parseFloat(anchorGuess.value);
+      anchorOut.style.display = 'block';
+      let msg = '';
+      if (chosenAnchor === null || isNaN(guess)) {
+        msg = 'Pick an anchor button and enter a guess to see what the anchor did to your estimate.';
+      } else {
+        const err = guess - actual;
+        const dir = err > 0 ? 'too high' : (err < 0 ? 'too low' : 'spot on');
+        if (chosenAnchor === 2 && guess < 3.4) {
+          msg = `Your guess (${guess}M) came in low — pulled toward the small anchor. Even knowing the anchor was meaningless, your brain used it. That's the bias, working in real time.`;
+        } else if (chosenAnchor === 80 && guess > 3.4) {
+          msg = `Your guess (${guess}M) came in high — pulled toward the large anchor. Even knowing the anchor was meaningless, your brain used it as a reference point. Classic anchoring.`;
+        } else if (Math.abs(err) < 1) {
+          msg = `You came within 1M of the right answer (${guess}M vs 3.4M). Either you knew this one, or you successfully ignored the anchor — which is harder than it sounds.`;
+        } else {
+          msg = `Your guess: ${guess}M. You came in ${dir} of the actual. Hard to know if the anchor moved you here — but if you'd been given the other anchor, you'd likely have landed somewhere different.`;
+        }
+      }
+      anchorMsg.textContent = msg;
+    });
+  }
+
+  // ========================================
+  // BAYES WIDGET
+  // ========================================
+  const bayesPrior = document.getElementById('bayesPrior');
+  const bayesSens = document.getElementById('bayesSens');
+  const bayesFpr = document.getElementById('bayesFpr');
+  const bayesPriorVal = document.getElementById('bayesPriorVal');
+  const bayesSensVal = document.getElementById('bayesSensVal');
+  const bayesFprVal = document.getElementById('bayesFprVal');
+  const bayesPosterior = document.getElementById('bayesPosterior');
+  const bayesBar = document.getElementById('bayesBar');
+  const bayesExplain = document.getElementById('bayesExplain');
+
+  function updateBayes() {
+    const prior = parseFloat(bayesPrior.value) / 100;
+    const sens  = parseFloat(bayesSens.value)  / 100;
+    const fpr   = parseFloat(bayesFpr.value)   / 100;
+    bayesPriorVal.textContent = (prior * 100).toFixed(1);
+    bayesSensVal.textContent  = (sens * 100).toFixed(1);
+    bayesFprVal.textContent   = (fpr * 100).toFixed(1);
+
+    const tp = prior * sens;
+    const fp = (1 - prior) * fpr;
+    const posterior = tp / (tp + fp);
+    const pct = (posterior * 100);
+    bayesPosterior.textContent = pct.toFixed(1);
+    bayesBar.style.width = pct + '%';
+
+    const N = 10000;
+    const have = Math.round(N * prior);
+    const truePos = Math.round(have * sens);
+    const dontHave = N - have;
+    const falsePos = Math.round(dontHave * fpr);
+    bayesExplain.innerHTML = `Of ${N.toLocaleString()} people: ~${have.toLocaleString()} have it (${truePos.toLocaleString()} test positive correctly) and ~${dontHave.toLocaleString()} don't (${falsePos.toLocaleString()} false positives). ${truePos.toLocaleString()} ÷ ${(truePos + falsePos).toLocaleString()} ≈ <strong>${pct.toFixed(1)}%</strong>.`;
+  }
+  if (bayesPrior) {
+    [bayesPrior, bayesSens, bayesFpr].forEach(s => s.addEventListener('input', updateBayes));
+    updateBayes();
+  }
+
+  // ========================================
+  // LOSS AVERSION WIDGET
+  // ========================================
+  const lossWin = document.getElementById('lossWin');
+  const lossWinVal = document.getElementById('lossWinVal');
+  const lossCalc = document.getElementById('lossCalc');
+  const lossOut = document.getElementById('lossOut');
+  const lossRatio = document.getElementById('lossRatio');
+  const lossInterpret = document.getElementById('lossInterpret');
+
+  if (lossWin) {
+    lossWin.addEventListener('input', () => { lossWinVal.textContent = lossWin.value; });
+    lossCalc.addEventListener('click', () => {
+      const win = parseInt(lossWin.value);
+      const ratio = win / 100;
+      lossRatio.textContent = ratio.toFixed(1);
+      lossOut.style.display = 'block';
+
+      let interpretation = '';
+      if (ratio >= 3) {
+        interpretation = `You need a ${ratio.toFixed(1)}× upside to risk a $100 loss — strong loss aversion. Above the ~2× population average. This protects you from blowing up, but it likely means you're systematically underweighting good asymmetric bets in your life. Watch for it on career moves and asks.`;
+      } else if (ratio >= 2) {
+        interpretation = `Your ratio of ${ratio.toFixed(1)}× lands near the textbook ~2× population average. Loss aversion is working normally for you — neither pathological nor immune. The risk is being unaware it's operating; now you are.`;
+      } else if (ratio >= 1.3) {
+        interpretation = `A ratio of ${ratio.toFixed(1)}× is below population average — you're more willing to take a $100 loss for moderate upside than most people. Good for capturing positive-EV opportunities, but make sure you're not under-pricing the downside.`;
+      } else {
+        interpretation = `A ratio of ${ratio.toFixed(1)}× is very low — either you're truly risk-tolerant, the numbers don't feel real (try imagining $100 actually leaving your bank account), or you're underweighting the loss. Re-run with the felt-sense of real money.`;
+      }
+      lossInterpret.textContent = interpretation;
+    });
+  }
+
+  // ========================================
+  // EV + KELLY WIDGET
+  // ========================================
+  const evCalc = document.getElementById('evCalc');
+  if (evCalc) {
+    evCalc.addEventListener('click', () => {
+      const p = parseFloat(document.getElementById('evProb').value) / 100;
+      const bank = parseFloat(document.getElementById('evBank').value);
+      const winAmt = parseFloat(document.getElementById('evWin').value);
+      const lossAmt = parseFloat(document.getElementById('evLoss').value);
+      const q = 1 - p;
+      const ev = p * winAmt - q * lossAmt;
+      const b = winAmt / lossAmt;
+      const kellyFrac = (p * b - q) / b;
+      const kelly = Math.max(0, kellyFrac) * bank;
+      const halfKelly = kelly / 2;
+
+      const out = document.getElementById('evOut');
+      out.style.display = 'block';
+      document.getElementById('evVal').textContent = (ev >= 0 ? '+' : '') + '$' + ev.toFixed(2);
+      document.getElementById('evDetail').innerHTML =
+        ev > 0
+          ? `Positive EV. Over many repeats, expect to gain $${ev.toFixed(2)} per $1 risked. But: <strong>only matters if you can survive variance.</strong>`
+          : (ev === 0
+              ? 'Break-even bet. Skip — your time has opportunity cost.'
+              : `<strong>Negative EV.</strong> You'll lose $${Math.abs(ev).toFixed(2)} per $1 risked over many repeats. Don't take this bet unless other factors override.`);
+
+      if (kellyFrac > 0) {
+        document.getElementById('evKelly').textContent = '$' + kelly.toFixed(0);
+        document.getElementById('evKellyDetail').innerHTML =
+          `Full Kelly: <strong>$${kelly.toFixed(0)}</strong> (${(kellyFrac * 100).toFixed(1)}% of bankroll). Half-Kelly (recommended in practice): <strong>$${halfKelly.toFixed(0)}</strong>. Full Kelly is mathematically optimal but assumes you've estimated p perfectly — you haven't.`;
+      } else {
+        document.getElementById('evKelly').textContent = '$0';
+        document.getElementById('evKellyDetail').textContent = 'Kelly says do not bet. The edge is insufficient given the payoff structure.';
+      }
+    });
+  }
+
+  // ========================================
+  // CALIBRATION TEST
+  // ========================================
+  const calibQuestions = [
+    { q: "Diameter of the Moon (km)", answer: 3474 },
+    { q: "Year Charles Dickens was born", answer: 1812 },
+    { q: "Length of the Nile river (km)", answer: 6650 },
+    { q: "Population of Iceland (people)", answer: 393000 },
+    { q: "Number of bones in an adult human body", answer: 206 },
+    { q: "Speed of light (km/s)", answer: 299792 },
+    { q: "Year insulin was first used to treat diabetes", answer: 1921 },
+    { q: "Distance from Earth to Sun (millions of km)", answer: 150 },
+    { q: "Height of Mount Kilimanjaro (meters)", answer: 5895 },
+    { q: "Number of countries in Africa", answer: 54 }
+  ];
+
+  const calibContainer = document.getElementById('calibQuestions');
+  if (calibContainer) {
+    calibQuestions.forEach((q, i) => {
+      const div = document.createElement('div');
+      div.className = 'calib-question';
+      div.innerHTML = `
+        <div class="q-text"><span class="q-num">${String(i + 1).padStart(2, '0')}</span>${q.q}</div>
+        <div class="calib-inputs">
+          <input type="number" placeholder="Low end (90% sure above)" data-idx="${i}" data-type="low" step="any">
+          <input type="number" placeholder="High end (90% sure below)" data-idx="${i}" data-type="high" step="any">
+        </div>
+        <div class="calib-result" id="calib-r-${i}" style="display: none;"></div>
+      `;
+      calibContainer.appendChild(div);
+    });
+
+    document.getElementById('calibSubmit').addEventListener('click', () => {
+      let hits = 0;
+      let answered = 0;
+      calibQuestions.forEach((q, i) => {
+        const low = parseFloat(document.querySelector(`input[data-idx="${i}"][data-type="low"]`).value);
+        const high = parseFloat(document.querySelector(`input[data-idx="${i}"][data-type="high"]`).value);
+        const result = document.getElementById(`calib-r-${i}`);
+
+        if (!isNaN(low) && !isNaN(high)) {
+          answered++;
+          const hit = q.answer >= low && q.answer <= high;
+          if (hit) hits++;
+          result.style.display = 'block';
+          result.textContent = hit
+            ? `✓ Hit · actual: ${q.answer.toLocaleString()}`
+            : `✗ Miss · actual: ${q.answer.toLocaleString()} (your range: ${low.toLocaleString()} – ${high.toLocaleString()})`;
+          result.className = 'calib-result ' + (hit ? 'hit' : 'miss');
+        }
+      });
+
+      const out = document.getElementById('calibResult');
+      out.style.display = 'block';
+      document.getElementById('calibScore').textContent = hits;
+
+      let msg = '';
+      if (answered < calibQuestions.length) {
+        msg = `Answer all 10 for the full score. So far: ${hits}/${answered}.`;
+      } else if (hits >= 9) {
+        msg = 'Genuinely well-calibrated, or genuinely lucky. Either way: rare. Most people land at 4-6 even when warned what the test is about.';
+      } else if (hits >= 7) {
+        msg = 'Better-calibrated than ~70% of people. Your ranges are wide enough to honor the 90% promise on most items.';
+      } else if (hits >= 5) {
+        msg = 'About average. Your "90% sure" is in practice closer to 60-70%. To improve: when you write the high end, ask "could it actually be even higher?" — then widen.';
+      } else {
+        msg = 'Significant overconfidence — your 90% intervals are too narrow. This is the normal result, and it\'s the diagnosis. Practice giving wider ranges than feels comfortable; that discomfort is the bias.';
+      }
+      document.getElementById('calibInterpret').textContent = msg;
+    });
+
+    document.getElementById('calibReset').addEventListener('click', () => {
+      calibContainer.querySelectorAll('input').forEach(i => i.value = '');
+      calibContainer.querySelectorAll('.calib-result').forEach(r => r.style.display = 'none');
+      document.getElementById('calibResult').style.display = 'none';
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>
